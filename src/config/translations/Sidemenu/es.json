@@ -1,0 +1,27 @@
+{
+  "profile": {
+    "label": "Perfil"
+  },
+  "subscription": {
+    "label": "Suscripciones"
+  },
+  "favorites": {
+    "label": "Favoritos"
+  },
+  "bookmarks": {
+    "label": "Marcadores"
+  },
+  "wallet": {
+    "label": "Cartera"
+  },
+  "rating": {
+    "label": "Clasificación"
+  },
+  "becomeCreator": {
+    "label": "Ser un creador"
+  },
+  "settings": {
+    "label": "Configuraciones"
+  },
+  "logOut": "Desconectarse"
+}

@@ -1,0 +1,27 @@
+{
+  "profile": {
+    "label": "Profile"
+  },
+  "subscription": {
+    "label": "Subscriptions"
+  },
+  "favorites": {
+    "label": "Favorites"
+  },
+  "bookmarks": {
+    "label": "Bookmarks"
+  },
+  "wallet": {
+    "label": "Wallet"
+  },
+  "rating": {
+    "label": "Rating"
+  },
+  "becomeCreator": {
+    "label": "Become creator"
+  },
+  "settings": {
+    "label": "Settings"
+  },
+  "logOut": "Log out"
+}
