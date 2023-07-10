@@ -3,68 +3,60 @@ import publications from '../../api/publications'
 import users from '../../api/users'
 import colors from '../../config/colors'
 import useApi from '../../hooks/useApi/useApi'
-import { CustomDivider, CustomText } from '../../components/CustomedComponents/index'
+import { CustomDivider, CustomHeader, CustomText } from '../../components/CustomedComponents/index'
 import PostCard from '../../components/PostCard/PostCard'
+import { useNavigate } from 'react-router-dom';
 
 import AutoSizer from 'react-virtualized-auto-sizer' ;
 import { FixedSizeList as List, ListChildComponentProps } from "react-window";
+import styled from 'styled-components'
+import { useAppDispatch, useAppSelector } from '../../redux/store'
+import { setFeedPublicationList } from '../../redux/publicationsSlice/publicationsSlice'
 
 const HomePage = () => {
     const email = "tata@example.com"
 
+    // Navigation
+    const navigate = useNavigate();
+
+    // Redux
+    const dispatch = useAppDispatch()
+    const feedList = useAppSelector(state => state.publications.feedPublications)
+
     // API
-    const getUserByEmailApi = useApi(users.getUserByEmail)
     const feedApi = useApi(publications.getFeedPublications)
+
 
     // Effects
     useEffect(() => {
-      getUserByEmailApi.request(email)
       feedApi.request()
     }, [])
+    
     useEffect(() => {
         if(feedApi.success) {
-          //dispatch(setFeedPublicationList(feedApi.data))
+          dispatch(setFeedPublicationList(feedApi.data))
           console.log('Voici le feed: ', feedApi.data)
         } else if(feedApi.error) {
           console.log('error [Feed api]') 
         }
       }, [feedApi.success, feedApi.error])
-    useEffect(() => {
-        console.log('Voici le user connecté : ', getUserByEmailApi.data)
-        if (getUserByEmailApi.success) {
-        } else if (getUserByEmailApi.error) {
-        console.log('Problème pour récupérer les infos du user connecté.')
-        }
-}, [getUserByEmailApi.success, getUserByEmailApi.error,])
 
-    // Custom Row for the List
-    const Row = ({ index, style }: ListChildComponentProps) => {
-        const item = feedApi.data[index];
-        return (
-            <div style={style}>
-                <PostCard
-                    publicationId={item.id}
-                    source={undefined}
-                    username={item.author.username}
-                    visible={true}
-                    displayName={item.author.displayName}
-                    comments={item.nbComments}
-                    likes={item.nbLikes}
-                    liked={item.liked}
-                    description={item.content}
-                    nbPictures={item.nbPictures}
-                    date={item.creationDate}
-                    authorId={item.author.id}
-                />
-                <CustomDivider />
-            </div>
-        );
-    }
+  // Functions
+
+  const handlePpClick = (username: string) => {
+    navigate(`/${username}`);
+  };
+
+  const handlePostClick = (username: string, publicationId: number) => {
+    navigate(`/${username}/post/${publicationId}`)
+  }
 
   return (
-    <div style={{backgroundColor: colors.dark.background, flex: 1, paddingTop: 30}}>
-        {feedApi.data.map((post: any) => (
+    <MainContainer>
+        <CustomHeader title='Accueil' />
+        {feedList.map(post => (
             <PostCard
+            key={post.id}
             publicationId={post.id}
             source={undefined}
             username={post.author.username}
@@ -77,10 +69,24 @@ const HomePage = () => {
             nbPictures={post.nbPictures}
             date={post.creationDate}
             authorId={post.author.id}
-        />
+            onPpPress={() => handlePpClick(post.author.username)}
+            onClick={() => handlePostClick(post.author.username, post.id)}
+          />
         ))}
-    </div>
+    </MainContainer>
   )
 }
+
+const MainContainer = styled.div`
+  background-color: ${colors.dark.background};
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  border-left: 0.5px solid ${colors.lightDark};
+  border-right: 0.5px solid ${colors.lightDark};
+  margin: auto;
+  position: relative;
+`;
+
 
 export default HomePage

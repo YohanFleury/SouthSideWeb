@@ -14,6 +14,7 @@ export default {
     danger: '#ff5252',
     lightGrey: '#E8E8E8',
     medium: '#7E7E7E',
+    lightDark: '#4D4D4D',
     white: "white"
 }
 

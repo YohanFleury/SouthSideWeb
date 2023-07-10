@@ -18,7 +18,7 @@ type currentUser = {
     displayName: string,
     email: string,
     id: number,
-    username: string
+    username: string,
 }
 
 interface initialStateProps {
@@ -35,6 +35,7 @@ interface initialStateProps {
     postPosted: boolean;
     contentType: 'posts' | 'medias' | 'videos' | 'lives';
     responsesArray: any[];
+    openPublicationId: number | null;
 }
 
 export const initialState: initialStateProps = {
@@ -60,7 +61,8 @@ export const initialState: initialStateProps = {
     savedPublicationsList: [],
     postPosted: false,
     contentType: 'posts',
-    responsesArray: ["", "", "", ""]
+    responsesArray: ["", "", "", ""],
+    openPublicationId: null
 }
 
 export const contextSlice = createSlice({
@@ -136,27 +138,27 @@ export const contextSlice = createSlice({
             }
         },
         addOneLikeToPublication: (state, {payload}) => {
-            const publication = state.savedPublicationsList.find(publication => publication.id == payload)
+            const publication = state.savedPublicationsList.find(publication => publication.id === payload)
             if(publication) {
                 publication.liked = true;
                 publication.nbLikes = publication.nbLikes + 1
             }
         },
         removeOneLikeToPublication: (state, {payload}) => {
-            const publication = state.savedPublicationsList.find(publication => publication.id == payload)
+            const publication = state.savedPublicationsList.find(publication => publication.id === payload)
             if(publication) {
                 publication.liked = false;
                 publication.nbLikes = publication.nbLikes - 1
             }
         },
         addNbComments: (state, {payload}) => {
-            const publication = state.savedPublicationsList.find(publication => publication.id == payload)
+            const publication = state.savedPublicationsList.find(publication => publication.id === payload)
             if(publication) {
                 publication.nbComments = publication.nbComments + 1 
             }
         },
         removeNbComments: (state, {payload}) => {
-            const publication = state.savedPublicationsList.find(publication => publication.id == payload)
+            const publication = state.savedPublicationsList.find(publication => publication.id === payload)
             if(publication) {
                 publication.nbComments = publication.nbComments - 1 
             }
@@ -169,6 +171,12 @@ export const contextSlice = createSlice({
         },
         setResponsesArray: (state, {payload}) => {
             state.responsesArray[payload.index] = payload.content
+        },
+        setopenModal: (state, {payload}) => {
+            state.openPublicationId = payload;
+        },
+        setcloseModal: (state) => {
+            state.openPublicationId = null;
         },
     }
 })
@@ -199,7 +207,9 @@ export const {
     addOneLikeToPublication,
     removeNbComments,
     removeOneLikeToPublication,
-    setResponsesArray
+    setResponsesArray,
+    setcloseModal,
+    setopenModal
 } = contextSlice.actions
 
 export default contextSlice.reducer

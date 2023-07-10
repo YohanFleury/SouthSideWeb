@@ -2,20 +2,29 @@ html, body, #root, .app-container, .RoutesPath {
   height: 100%;
   margin: 0;
   padding: 0;
+  background-color: #000000;
 }
+
+/* Cache la barre de défilement pour Chrome, Safari et Opera */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Cache la barre de défilement pour IE et Edge */
+body {
+  -ms-overflow-style: none;
+}
+
+/* Cache la barre de défilement pour Firefox */
+body {
+  scrollbar-width: none;
+}
+
+
 .app-container {
-}
-.RoutesPath {
-  display: flex;
-  flex: 1;
-}
-.app-container {
   display: flex;
 }
-.RoutesPath {
-  display: flex;
-  flex: 1;
-}
+
 
 .App {
   text-align: center;

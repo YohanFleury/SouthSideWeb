@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-type Publication = {
+export type Publication = {
     author: {
         displayName: string;
         id: number;
@@ -43,34 +43,34 @@ export const publicationsSlice = createSlice({
             state.oneCreatorPublicationsFromResearch = payload
         },
         addLikeToPublication: (state, {payload}) => {
-            const fp = state.feedPublications.find(publication => publication.id == payload)
+            const fp = state.feedPublications.find(publication => publication.id === payload)
             if(fp) {
                 fp.liked = true;
                 fp.nbLikes = fp.nbLikes + 1
             }
-            const op = state.oneCreatorPublications.find(publication => publication.id == payload)
+            const op = state.oneCreatorPublications.find(publication => publication.id === payload)
             if(op) {
                 op.liked = true;
                 op.nbLikes = op.nbLikes + 1
             }
-            const opfr = state.oneCreatorPublicationsFromResearch.find(publication => publication.id == payload)
+            const opfr = state.oneCreatorPublicationsFromResearch.find(publication => publication.id === payload)
             if(opfr) {
                 opfr.liked = true;
                 opfr.nbLikes = opfr.nbLikes + 1
             }
         },
         removeLikeToPublication: (state, {payload}) => {
-            const fp = state.feedPublications.find(publication => publication.id == payload)
+            const fp = state.feedPublications.find(publication => publication.id === payload)
             if(fp) {
                 fp.liked = false;
                 fp.nbLikes = fp.nbLikes - 1
             }
-            const op = state.oneCreatorPublications.find(publication => publication.id == payload)
+            const op = state.oneCreatorPublications.find(publication => publication.id === payload)
             if(op) {
                 op.liked = false;
                 op.nbLikes = op.nbLikes - 1
             }
-            const opfr = state.oneCreatorPublicationsFromResearch.find(publication => publication.id == payload)
+            const opfr = state.oneCreatorPublicationsFromResearch.find(publication => publication.id === payload)
             if(opfr) {
                 opfr.liked = false;
                 opfr.nbLikes = opfr.nbLikes - 1
@@ -87,29 +87,29 @@ export const publicationsSlice = createSlice({
             }
         },
         addOneToNbComments: (state, {payload}) => {
-            const fp = state.feedPublications.find(publication => publication.id == payload)
+            const fp = state.feedPublications.find(publication => publication.id === payload)
             if(fp) {
                 fp.nbComments = fp.nbComments + 1
             }
-            const op = state.oneCreatorPublications.find(publication => publication.id == payload)
+            const op = state.oneCreatorPublications.find(publication => publication.id === payload)
             if(op) {
                 op.nbComments = op.nbComments + 1
             }
-            const opfr = state.oneCreatorPublicationsFromResearch.find(publication => publication.id == payload)
+            const opfr = state.oneCreatorPublicationsFromResearch.find(publication => publication.id === payload)
             if(opfr) {
                 opfr.nbComments = opfr.nbComments + 1
             }
         },
         removeOneToNbComments: (state, {payload}) => {
-            const fp = state.feedPublications.find(publication => publication.id == payload)
+            const fp = state.feedPublications.find(publication => publication.id === payload)
             if(fp) {
                 fp.nbComments = fp.nbComments - 1
             }
-            const op = state.oneCreatorPublications.find(publication => publication.id == payload)
+            const op = state.oneCreatorPublications.find(publication => publication.id === payload)
             if(op) {
                 op.nbComments = op.nbComments - 1
             }
-            const opfr = state.oneCreatorPublicationsFromResearch.find(publication => publication.id == payload)
+            const opfr = state.oneCreatorPublicationsFromResearch.find(publication => publication.id === payload)
             if(opfr) {
                 opfr.nbComments = opfr.nbComments - 1
             }

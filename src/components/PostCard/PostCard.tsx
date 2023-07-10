@@ -4,7 +4,12 @@ import { arrayBufferToBase64 } from '../../config/utils/arrayBufferToBase64';
 import useApi from '../../hooks/useApi/useApi';
 import { CustomText, CustomDivider } from '../CustomedComponents/index';
 import PostCardHeader from '../PostCardHeader/PostCardHeader';
+
+
 import Slider from "react-slick";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+
 import styled from 'styled-components';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { addLikeToPublication, removeLikeToPublication } from '../../redux/publicationsSlice/publicationsSlice';
@@ -25,10 +30,11 @@ export interface PostCardProps {
     displayName: string;
     onTipsPress?: () => void;
     onPpPress?: () => void;
-    source: any;
+    source?: any;
     publicationId: number;
     date: string | undefined;
-    authorId: number
+    authorId: number;
+    onClick?: () => void
 }
 
 const DOUBLE_PRESS_DELAY = 300;
@@ -49,10 +55,12 @@ const PostCard = ({
     publicationId,
     date,
     authorId,
+    onClick
    }: PostCardProps) => {
     
 // State
 const [testImages, settestImages] = useState<any[]>(new Array(nbPictures).fill(null))
+const [isLiked, setIsLiked] = useState(liked)
 const [lastFetchedIndex, setLastFetchedIndex] = useState(0);
 const [lastPress, setLastPress] = useState<number>(0);
 const [numberLikes, setNumberLikes] = useState<number>(likes)
@@ -63,8 +71,8 @@ const theme = useAppSelector(state => state.context.theme)
 
 // API
 const getPublicationPicturesApi = useApi(publications.getPublicationPictures)
-const { request: addLike, data: likeAdded, error } = useApi(publications.addLike)
-const {request: deleteLike, data: likeDeleted, error: erroDeletedLike} = useApi(publications.deleteLike)
+const addLikeApi = useApi(publications.addLike)
+const deleteLikeApi = useApi(publications.deleteLike)
 
 // Effects
 useEffect(() => {
@@ -85,6 +93,19 @@ useEffect(() => {
   }
 }, [getPublicationPicturesApi.success, getPublicationPicturesApi.error, getPublicationPicturesApi.data])   
 
+useEffect(() => {
+  if (addLikeApi.success) {
+    setIsLiked(true)
+    setNumberLikes(numberLikes + 1)
+  }
+}, [addLikeApi.success])
+
+useEffect(() => {
+    if (deleteLikeApi.success) {
+      setIsLiked(false)
+      setNumberLikes(numberLikes - 1)
+    }
+  }, [deleteLikeApi.success])
 // Functions
 
 const handleIndexChanged = useCallback((index: number) => {
@@ -104,16 +125,10 @@ const handleDoublePress = () => {
     setLastPress(time);
 }
 const handleLike = () => {
-    addLike(publicationId)
-    setNumberLikes(numberLikes + 1)
-    dispatch(addLikeToPublication(publicationId))
-    dispatch(addOneLikeToPublication(publicationId))
+    addLikeApi.request(publicationId)
 }
 const handleDislike = () => {
-    deleteLike(publicationId)
-    setNumberLikes(numberLikes - 1)
-    dispatch(removeLikeToPublication(publicationId))
-    dispatch(removeOneLikeToPublication(publicationId))
+    deleteLikeApi.request(publicationId)
 }
 
 const settings = {
@@ -132,6 +147,7 @@ const settings = {
         <MainContainer>
             <Container>
                 <PostCardHeader
+                onClick={onClick}
                 username={username}
                 displayName={displayName}
                 authorId={authorId}
@@ -144,30 +160,36 @@ const settings = {
                 description={description}
                 isSurvey={false}
                 />
-                {testImages.length > 0 &&
+                <div style={{maxWidth: '100%', maxHeight: '100%'}}>
+                {/* {testImages.length > 0 &&
                     <Slider {...settings}>
                     {testImages.map((image, index) => (
-                        <ImageContainer key={index} onDoubleClick={handleDoublePress}>
-                            <Image src={`data:image/jpg;base64,${image}`} />
+                        <ImageContainer  onDoubleClick={handleDoublePress}>
+                            <Image key={index} src={`data:image/jpg;base64,${image}`} />
                         </ImageContainer>
                     ))}
                     </Slider>
-                }
+                } */}
+                {testImages.length > 0 && 
+                <ImageContainer onClick={onClick}  onDoubleClick={handleDoublePress}>
+                    <Image src={`data:image/jpg;base64,${testImages[0]}`} />
+                </ImageContainer>}
+                </div>
                 {description &&
-                <Description hasTestImages={testImages && testImages.length > 1}>
+                <Description onClick={onClick} style={{marginTop: testImages.length > 1 ? 25 : 8}}>
                     <CustomText style={{fontSize: 16}}>{description}</CustomText>
                 </Description>}
                 <IconContainer>
                     <InnerContainer>
                         <IconGroup>
-                            {liked 
+                            {isLiked 
                             ? <IoMdHeart size={22} color='red' onClick={handleDislike} />
-                            : <IoMdHeartEmpty size={22} color={theme === "dark" ? "white" : 'black'} onClick={handleLike} />
+                            : <IoMdHeartEmpty size={22} color={theme === "dark" ? colors.medium : 'black'} onClick={handleLike} />
                             }
-                            <CustomText style={{fontSize: 11, marginLeft: 5}}>{likes}</CustomText>
+                            <CustomText style={{fontSize: 11, marginLeft: 5}}>{numberLikes}</CustomText>
                         </IconGroup>
                         <IconGroup>
-                            <FaRegComment size={19}  color={theme === 'dark' ? "white" : "black"}/>
+                            <FaRegComment size={19}  color={theme === 'dark' ? colors.medium : "black"}/>
                             <CustomText style={{fontSize: 11, marginLeft: 5}}>{comments}</CustomText>
                         </IconGroup>
                     </InnerContainer>
@@ -187,31 +209,38 @@ const MainContainer = styled.div`
   padding-left: 20px;
   padding-right: 20px;
   padding-top: 10px;
-  padding-bottom: 10px
+  padding-bottom: 10px;
+  max-width: 100%;
+  cursor: pointer;
 `;
 
 const Container = styled.div`
   overflow: hidden;
   flex: 1;
+  position: relative;
+  width: 100%;
 `;
 
 const ImageContainer = styled.div`
-  width: 100%;
-  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  height: auto; /* Remplacez par la hauteur maximale souhaitée */
+  margin-top: 20px;
+  max-height: 100%;
+  max-width: 100%;
 `;
 
 const Image = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100%;   // Change to 100%
+  height: 100%;  // Change to 100%
+  object-fit: contain;  // Add this line
+  border-radius: 10px;
 `;
 
-interface DescriptionProps {
-    hasTestImages: boolean;
-}
 
-const Description = styled.div<DescriptionProps>`
-  margin-top: ${({ hasTestImages }) => hasTestImages ? 25 : 8}px;
+const Description = styled.div`
   font-size: 16px;
   padding: 5px
 `;

@@ -1,10 +1,12 @@
 import apiClient from "./client";
-const endpoint = '/publications'
 
+const endpoint = '/publications'
 
 const getFeedPublications = () => apiClient.get(`${endpoint}/news`)
 
 const getOneUsersPublications = (id: number) => apiClient.get(`${endpoint}/users/${id}`)
+
+const getOnePublication = (id: number) => apiClient.get(`${endpoint}/${id}`)
 
 const createPublication = (content: string, isPublic: boolean, authorId: number) => (
     apiClient.post(endpoint, {
@@ -99,5 +101,6 @@ export default {
     getFeedPublications,
     savePublication,
     getSavedPublications,
-    deleteSavedPublication
+    deleteSavedPublication,
+    getOnePublication
 }

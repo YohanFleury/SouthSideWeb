@@ -5,13 +5,14 @@ import users from '../../api/users';
 import { arrayBufferToBase64 } from '../../config/utils/arrayBufferToBase64';
 import { convertTimeFormat } from '../../config/utils/ocnvertTimeFormat';
 import useApi from '../../hooks/useApi/useApi';
-import { addPublicationToSavedList, deletePublicationFromSavedList } from '../../redux/contextSlice/contextSlice';
+import { addPublicationToSavedList, deletePublicationFromSavedList, setopenModal, setcloseModal } from '../../redux/contextSlice/contextSlice';
 import { deletePublication } from '../../redux/publicationsSlice/publicationsSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
 import ProfilPicture from '../ProfilPicture/ProfilPicture';
 import { MdMoreHoriz } from 'react-icons/md';
 import { CustomText } from '../CustomedComponents/index';
 import colors from '../../config/colors';
+import PostCardModal from '../PostCardModal/PostCardModal';
 
 interface PostCardHeaderProps {
     publicationId: number;
@@ -25,6 +26,7 @@ interface PostCardHeaderProps {
     nbComments?: number;
     nbPictures?: number;
     isSurvey: boolean;
+    onClick?: () => void;
 }
 
 const PostCardHeader = ({ 
@@ -38,18 +40,20 @@ const PostCardHeader = ({
     nbComments, 
     description,
     nbPictures,
-    isSurvey
+    isSurvey,
+    onClick
 }: PostCardHeaderProps) => {
 
-    const [modalVisible, setModalVisible] = useState(false);
-    const [coordinateX, setCoordinateX] = useState<number>(0)
-    const [coordinateY, setCoordinateY] = useState<number>(0)
 
     const [profilPicture, setProfilPicture] = useState<any>()
 
     const savedPublicationsList = useAppSelector(state => state.context.savedPublicationsList)
+    const openPublicationId = useAppSelector(state => state.context.openPublicationId)
+    const currentUser = useAppSelector(state => state.context.currentUser)
     const dispatch = useAppDispatch()
     
+    const isModalOpen = openPublicationId === publicationId;
+
     const savePublicationApi = useApi(publications.savePublication)
     const deleteSavePublicationApi = useApi(publications.deleteSavedPublication)
     const deletePublicationApi = useApi(publications.deletePublication)
@@ -107,14 +111,14 @@ const PostCardHeader = ({
         } else if(deletePublicationApi.error) {
           console.log('Un problème est survenu [Delete publication]')
         }
-      }, [deletePublicationApi.success, deletePublicationApi.error])
+    }, [deletePublicationApi.success, deletePublicationApi.error])
 
     const handleReport = () => {
         console.log('Publication signalée')
-        setModalVisible(false)
+        dispatch(setcloseModal())
     }
     const handleDelete = () => {
-        setModalVisible(false);
+        dispatch(setcloseModal())
         deletePublicationApi.request(publicationId)
     }
     const handleSave = () => {
@@ -124,16 +128,29 @@ const PostCardHeader = ({
         } else {
             savePublicationApi.request(publicationId)
         }
-        setModalVisible(false);
+        dispatch(setcloseModal())
     }
     
     return (
-        <Container>
+        <Container onClick={onClick}>
             <Header>
-                <ProfilInfos>
-                    <div style={{display: 'flex', flexDirection: 'row'}}>
+            {isModalOpen &&
+                <MyModal>
+                    {currentUser.id !== authorId && 
+                    <MenuItem onClick={handleDelete}><CustomText style={{fontSize: '15px'}}>Signaler</CustomText></MenuItem>}
+                    {currentUser.id === authorId &&
+                    <MenuItem onClick={handleDelete}><CustomText style={{fontSize: '15px'}}>Supprimer</CustomText></MenuItem>}
+                    <MenuItem onClick={handleSave}><CustomText style={{fontSize: '15px'}}>Ajouter aux signets</CustomText></MenuItem>
+                </MyModal>
+            }
+                <ProfilInfos onClick={(event: any) => {
+                                event.stopPropagation();
+                                if (onPpPress) {
+                                    onPpPress();
+                                }
+                            }} >
+                    <div style={{display: 'flex', flexDirection: 'row', flex: 10}}>
                         <ProfilPicture 
-                            onPress={onPpPress} 
                             size={40}
                             source={`data:image/jpg;base64,${profilPicture}`}
                         />      
@@ -143,15 +160,11 @@ const PostCardHeader = ({
                         </TextContainer>
                     </div>
                 </ProfilInfos>
-                <TimeContainer>
+                <TimeContainer onClick={() => console.log("okokok")}>
                     <MdMoreHoriz 
                         size={21} 
                         color="white"
-                        onMouseDown={(event) => {
-                            setCoordinateX(event.pageX)
-                            setCoordinateY(event.pageY)
-                        }}
-                        onClick={() => setModalVisible(true)} />
+                        onClick={() => dispatch(setopenModal(publicationId))} />
                     {date && <CustomText style={{fontSize: '12px', color: colors.medium}}>{convertTimeFormat(date)}</CustomText>}
                 </TimeContainer>
             </Header>
@@ -159,11 +172,26 @@ const PostCardHeader = ({
     )
 }
 
-interface ProfilInfoProps {
-    padding?: number;
-    backgroundColor?: string;
-    justifyContent?: string;
-}
+const MyModal = styled.div`
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 10px;
+    border-radius: 15px;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    box-shadow: 0 0 10px white;  /* Ajoute une ombre blanche */
+`;
+
+
+const MenuItem = styled.div`
+  cursor: pointer;
+  margin-bottom: 10px;
+`;
 
 const Container = styled.div`
     padding: '10px';
@@ -173,12 +201,13 @@ const Container = styled.div`
 const Header = styled.div`
     display: flex;
     justify-content: space-between;
-`;
-
-const ProfilInfos = styled.div`
+    `;
+    
+    const ProfilInfos = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    width: 90%;
 `;
 
 const TextContainer = styled.div`

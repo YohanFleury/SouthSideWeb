@@ -8,7 +8,7 @@ import { useAppSelector } from '../../redux/store';
 interface ProfilPictureProps {
     size: number;
     source?: string;
-    onPress?: () => void;
+    onPress?: any;
 }
 interface ImageContainerProps {
     size: number;
