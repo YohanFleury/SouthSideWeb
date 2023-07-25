@@ -10,6 +10,7 @@ import useApi from './hooks/useApi/useApi';
 import users from './api/users';
 import publications from './api/publications';
 import { setCurrentUser, setFavoritesList, setLanguage, setSavedPublicationsList, setSubsList } from './redux/contextSlice/contextSlice';
+import CreatePostModal from './components/CreatePostModal/CreatePostModal';
 
 const RedDiv = styled.div`
   display: flex;
@@ -19,7 +20,7 @@ const RedDiv = styled.div`
   `;
 
   function InnerApp() {
-    const email = "alicelee@example.com"
+    const email = "tata@example.com"
     // Redux
     const dispatch = useAppDispatch()
     // API 
@@ -77,6 +78,7 @@ const RedDiv = styled.div`
         <RedDiv>
           <Menu />
           <RoutesPath />
+          <CreatePostModal />
         </RedDiv>
       </Router>
     );

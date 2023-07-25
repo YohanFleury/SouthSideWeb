@@ -10,6 +10,7 @@ import PostCard from '../PostCard/PostCard';
 import { Publication } from '../../redux/publicationsSlice/publicationsSlice';
 import CommentItem from '../CommentItem/CommentItem';
 import { FiSend } from "react-icons/fi";
+import { useAppSelector } from '../../redux/store';
 
 type Comment = {
   author: {
@@ -28,8 +29,13 @@ const PostDetail = () => {
   const [publication, setPublication] = useState<Publication>()
   const [comments, setComments] = useState<Comment[]>([])
   const [commentValue, setCommentValue] = useState<string>('')
+  const [isCreatorInSubList, setIsCreatorInSubList] = useState<boolean>(false)
+
 // Params
   const { username, publicationId } = useParams();
+
+// Redux
+const listSub = useAppSelector(state => state.context.subsList)
 
 // API
   const addCommentApi = useApi(publications.addComment)
@@ -38,6 +44,11 @@ const PostDetail = () => {
   const getPublicationApi = useApi(publications.getOnePublication)
 
 // Effects
+
+useEffect(() => {
+  const isInSubList = listSub.find(creator => creator.username == username)
+  setIsCreatorInSubList(isInSubList ? true : false)
+}, [])
 
 useEffect(() => {
   getPublicationApi.request(publicationId)
@@ -93,6 +104,7 @@ const addComment = () => {
         <CustomHeader title='Commentaires' />
         {publication &&
         <PostCard
+          onClick={() => null}
           publicationId={publication.id}
           username={publication.author.username}
           visible={publication.visible}
@@ -105,6 +117,7 @@ const addComment = () => {
           date={publication.creationDate}
           authorId={publication.author.id}
         />}
+        {isCreatorInSubList &&
         <div style={{display: 'flex', alignItems: 'center', }}>
           <CustomInput
             placeholder='Ajouter un commentaire' 
@@ -116,8 +129,8 @@ const addComment = () => {
             style={{backgroundColor: commentValue.length > 0 ? '#1E6CD0' : '#042145'}}>
             <CustomText style={{fontSize: 14, fontWeight: 'bold'}}>Commenter</CustomText>
           </StyledButton>
-        </div>
-        {
+        </div>}
+        { publication?.visible &&
           comments.map(comment => <CommentItem
             key={comment.id}
             displayName={comment.author.displayName}

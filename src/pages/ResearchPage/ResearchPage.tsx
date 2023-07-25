@@ -1,11 +1,42 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
+import { CustomHeader, CustomInput, CustomText } from '../../components/CustomedComponents';
 import users from '../../api/users';
 import CreatorCard from '../../components/CreatorCard/CreatorCard';
-import CreatorsList from '../../components/CreatorsList/CreatorsList';
-import { CustomHeader, CustomInput } from '../../components/CustomedComponents';
 import colors from '../../config/colors';
 import useApi from '../../hooks/useApi/useApi';
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+
+import djj from '../../assets/djjj.jpg'
+import emi from '../../assets/emi.jpg'
+import maxime from '../../assets/maxime.jpg'
+import pablo from '../../assets/pablo.jpeg'
+import CustomCarousel from '../../components/CustomCarousel/CustomCarousel';
+
+const responsive = {
+  largeDesktop: {
+    breakpoint: { max: 3000, min: 1224 },
+    items: 2,
+    slidesToSlide: 1
+  },
+  desktop: {
+    breakpoint: { max: 1223, min: 700 },
+    items: 2,
+    slidesToSlide: 1
+  },
+  tablet: {
+    breakpoint: { max: 699, min: 464 },
+    items: 2,
+    slidesToSlide: 1
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+    slidesToSlide: 1
+  }
+};
+
 
 const ResearchPage = () => {
 
@@ -19,7 +50,7 @@ const ResearchPage = () => {
   // Effects
   useEffect(() => {
     getCreatorsApi.request()
-}, [])
+  }, [])
 
   useEffect(() => {
     textSearch.length > 0 &&
@@ -34,22 +65,29 @@ const ResearchPage = () => {
     }
   }, [getCreatorsApi.success, getCreatorsApi.error, getCreatorsApi.data])
 
-  // Fonction
+  // Function
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTextSearch(event.target.value);
   };
+
   return (
     <MainContainer>
       <CustomHeader title='Recherche' />
-      <CustomInput
-        placeholder='Rechercher un créateur' 
-        onChange={handleChange} 
-        value={textSearch}
-      />
-      <div>
-      <CreatorsList title='Tendances' data={getCreatorsApi.data} />
-      <CreatorsList title='Suggestion' data={getCreatorsApi.data} />
+      <InputContainer>
+        <CustomInput
+          placeholder='Rechercher un créateur' 
+          onChange={handleChange} 
+          value={textSearch}
+        />
+      </InputContainer>
+      <div style={{margin: 10, marginTop: 20}}>
+        <CustomText>Tendances</CustomText>
       </div>
+      <CustomCarousel creators={getCreatorsApi.data} />
+      <div style={{margin: 10, marginTop: 60}}>
+        <CustomText>Suggestions</CustomText>
+      </div>
+      <CustomCarousel creators={getCreatorsApi.data} />
     </MainContainer>
   )
 }
@@ -66,4 +104,34 @@ const MainContainer = styled.div`
   height: 100%;
 `;
 
+const InputContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+`;
+
 export default ResearchPage
+
+{/* <Carousel 
+        swipeable={true}
+        draggable={true}
+        responsive={responsive}
+        ssr={true}
+        infinite={true}
+        keyBoardControl={true}
+        customTransition="all .5"
+        transitionDuration={500}
+        containerClass="carousel-container"
+        removeArrowOnDeviceType={["tablet", "mobile"]}
+      >
+{
+  getCreatorsApi.data.map((creator: any) => (
+    <CreatorCard 
+      key={creator.id}
+      username={creator.username}
+      name={creator.displayName}
+      creatorId={creator.id} />
+  ))
+}
+      </Carousel> */}

@@ -5,18 +5,19 @@ import useApi from '../../hooks/useApi/useApi';
 import { CustomText, CustomDivider } from '../CustomedComponents/index';
 import PostCardHeader from '../PostCardHeader/PostCardHeader';
 
-
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css"; 
-import "slick-carousel/slick/slick-theme.css";
-
+import { Carousel } from 'react-responsive-carousel';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import '../CustomCarousel/MyCarouselStyles.css'
 import styled from 'styled-components';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { addLikeToPublication, removeLikeToPublication } from '../../redux/publicationsSlice/publicationsSlice';
 import { addOneLikeToPublication, removeOneLikeToPublication } from '../../redux/contextSlice/contextSlice';
 
+import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
 import { FaRegComment } from "react-icons/fa";
+import { FaLock } from "react-icons/fa";
+
 import colors from '../../config/colors';
 
 export interface PostCardProps {
@@ -34,10 +35,32 @@ export interface PostCardProps {
     publicationId: number;
     date: string | undefined;
     authorId: number;
-    onClick?: () => void
+    onClick: () => void
 }
 
 const DOUBLE_PRESS_DELAY = 300;
+
+const CustomArrowNext = (onClickHandler: () => void, hasPrev: boolean, label: string) => 
+  hasPrev && (
+    <ArrowContainer onClick={(event) => {
+      event.stopPropagation();
+      onClickHandler();
+    }} style={{ right: '0' }}>
+      <FaArrowRight color="white" />
+    </ArrowContainer>
+  );
+
+const CustomArrowPrev = (onClickHandler: () => void, hasNext: boolean, label: string) => 
+  hasNext && (
+    <ArrowContainer onClick={(event) => {
+      event.stopPropagation();
+      onClickHandler();
+    }} style={{ left: '0' }}>
+      <FaArrowLeft color="white" />
+    </ArrowContainer>
+  );
+
+
 
 
 const PostCard = ({
@@ -64,17 +87,27 @@ const [isLiked, setIsLiked] = useState(liked)
 const [lastFetchedIndex, setLastFetchedIndex] = useState(0);
 const [lastPress, setLastPress] = useState<number>(0);
 const [numberLikes, setNumberLikes] = useState<number>(likes)
-
+const [isCreatorInSubList, setIsCreatorInSubList] = useState<boolean>(false)
+const [hasUserAccesToThePost, setHasUserAccesToThePost] = useState(!visible ? isCreatorInSubList : true)
 // Redux 
 const dispatch = useAppDispatch()
 const theme = useAppSelector(state => state.context.theme)
+const openPublicationId = useAppSelector(state => state.context.openPublicationId)
+const listSub = useAppSelector(state => state.context.subsList)
 
+const isPostModalOpen = openPublicationId === publicationId
 // API
 const getPublicationPicturesApi = useApi(publications.getPublicationPictures)
 const addLikeApi = useApi(publications.addLike)
 const deleteLikeApi = useApi(publications.deleteLike)
 
 // Effects
+
+useEffect(() => {
+  const isInSubList = listSub?.find(creator => creator.username == username)
+  setIsCreatorInSubList(isInSubList ? true : false)
+}, [listSub])
+
 useEffect(() => {
     if(nbPictures > 0) {
         getPublicationPicturesApi.request(publicationId, 0);
@@ -125,29 +158,19 @@ const handleDoublePress = () => {
     setLastPress(time);
 }
 const handleLike = () => {
+  if (!isCreatorInSubList && !visible ) return ;
     addLikeApi.request(publicationId)
 }
 const handleDislike = () => {
     deleteLikeApi.request(publicationId)
 }
 
-const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: false,
-    swipeToSlide: true,
-    afterChange: (current: any) => handleIndexChanged(current),
-  };
 
   return (
-    <>
-        <MainContainer>
+        <MainContainer style={{cursor: !visible && !isCreatorInSubList ? 'default' : 'pointer'}}>
             <Container>
                 <PostCardHeader
-                onClick={onClick}
+                onClick={() =>  isPostModalOpen ? null : onClick()}
                 username={username}
                 displayName={displayName}
                 authorId={authorId}
@@ -160,46 +183,66 @@ const settings = {
                 description={description}
                 isSurvey={false}
                 />
-                <div style={{maxWidth: '100%', maxHeight: '100%'}}>
-                {/* {testImages.length > 0 &&
-                    <Slider {...settings}>
-                    {testImages.map((image, index) => (
-                        <ImageContainer  onDoubleClick={handleDoublePress}>
-                            <Image key={index} src={`data:image/jpg;base64,${image}`} />
-                        </ImageContainer>
-                    ))}
-                    </Slider>
-                } */}
-                {testImages.length > 0 && 
-                <ImageContainer onClick={onClick}  onDoubleClick={handleDoublePress}>
+                {testImages.length > 0 &&
+                    <Carousel 
+                      renderArrowPrev={CustomArrowPrev}
+                      renderArrowNext={CustomArrowNext}
+                      showStatus={false} 
+                      showIndicators={testImages.length < 2 ? false : true}
+                      onChange={handleIndexChanged}>
+                      {testImages.map((image, index) => (
+                          <ImageContainer  onDoubleClick={handleDoublePress}>
+                              <Image key={index} src={`data:image/jpg;base64,${image}`} />
+                          </ImageContainer>
+                      ))}
+                    </Carousel>
+                  } 
+                {/* {testImages.length > 0 && 
+                <ImageContainer onClick={() =>  isPostModalOpen ? null : onClick()}  onDoubleClick={handleDoublePress}>
                     <Image src={`data:image/jpg;base64,${testImages[0]}`} />
-                </ImageContainer>}
-                </div>
-                {description &&
-                <Description onClick={onClick} style={{marginTop: testImages.length > 1 ? 25 : 8}}>
-                    <CustomText style={{fontSize: 16}}>{description}</CustomText>
-                </Description>}
+                </ImageContainer>} */}
                 <IconContainer>
                     <InnerContainer>
                         <IconGroup>
                             {isLiked 
                             ? <IoMdHeart size={22} color='red' onClick={handleDislike} />
-                            : <IoMdHeartEmpty size={22} color={theme === "dark" ? colors.medium : 'black'} onClick={handleLike} />
+                            : <IoMdHeartEmpty 
+                              size={22} 
+                              color={!isCreatorInSubList && !visible ? colors.medium : colors.white } 
+                              onClick={handleLike} />
                             }
                             <CustomText style={{fontSize: 11, marginLeft: 5}}>{numberLikes}</CustomText>
                         </IconGroup>
                         <IconGroup>
-                            <FaRegComment size={19}  color={theme === 'dark' ? colors.medium : "black"}/>
+                            <FaRegComment size={19} color={!isCreatorInSubList && !visible ? colors.medium : colors.white } />
                             <CustomText style={{fontSize: 11, marginLeft: 5}}>{comments}</CustomText>
                         </IconGroup>
                     </InnerContainer>
                 </IconContainer>
+                {description &&
+                <Description onClick={() =>  isPostModalOpen ? null : onClick()} style={{marginTop: testImages.length > 1 ? 25 : 8}}>
+                    <CustomText style={{fontSize: 16}}>{description}</CustomText>
+                </Description>}
             </Container>
         </MainContainer>
-        <CustomDivider />
-    </>        
   )
 }
+
+const ArrowContainer = styled.div`
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 50%;  // Centre le conteneur verticalement
+  transform: translateY(-50%);  // Utilisé pour centrer parfaitement
+  z-index: 5;
+  cursor: pointer;
+`;
+
 
 const MainContainer = styled.div`
   display: flex;
@@ -211,7 +254,7 @@ const MainContainer = styled.div`
   padding-top: 10px;
   padding-bottom: 10px;
   max-width: 100%;
-  cursor: pointer;
+  border-bottom: 1px solid ${colors.lightDark};
 `;
 
 const Container = styled.div`
@@ -227,7 +270,7 @@ const ImageContainer = styled.div`
   align-items: center;
   overflow: hidden;
   height: auto; /* Remplacez par la hauteur maximale souhaitée */
-  margin-top: 20px;
+  margin-top: 10px;
   max-height: 100%;
   max-width: 100%;
 `;
@@ -242,7 +285,7 @@ const Image = styled.img`
 
 const Description = styled.div`
   font-size: 16px;
-  padding: 5px
+  padding: 5px;
 `;
 
 

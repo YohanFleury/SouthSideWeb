@@ -11,23 +11,15 @@ const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>((props,
   const theme = useAppSelector((state) => state.context.theme)
 
   return (
-      <InputContainer>
         <StyledInput
           ref={ref}
           style={props.stylesCustom}
           {...props}
         />
-      </InputContainer>
   );
 });
 
-const InputContainer = styled.div`
-  display: flex;
-  flex: 1;
-  justify-content: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
-`;
+
 
 const StyledInput = styled.input`
   height: 15px;

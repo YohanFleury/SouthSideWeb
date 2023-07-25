@@ -79,11 +79,11 @@ const HomePage = () => {
 
 const MainContainer = styled.div`
   background-color: ${colors.dark.background};
+  border-left: 0.5px solid ${colors.lightDark};
+  border-right: 0.5px solid ${colors.lightDark};
   display: flex;
   flex-direction: column;
   flex: 1;
-  border-left: 0.5px solid ${colors.lightDark};
-  border-right: 0.5px solid ${colors.lightDark};
   margin: auto;
   position: relative;
 `;

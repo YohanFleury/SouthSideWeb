@@ -8,11 +8,12 @@ import users from '../../api/users';
 import publications from '../../api/publications';
 import { FaLock } from "react-icons/fa";
 import { arrayBufferToBase64 } from '../../config/utils/arrayBufferToBase64';
-import { useAppSelector } from '../../redux/store';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
 import PostCard from '../../components/PostCard/PostCard';
 import CreatorProfilHeader from '../../components/CreatorProfilHeader/CreatorProfilHeader';
 import ContentType from '../../components/ContentType/ContentType';
 import { useNavigate } from 'react-router-dom';
+import { addSubsToTheList } from '../../redux/contextSlice/contextSlice';
 
 type creatorInfos = {
   account: any;
@@ -33,20 +34,34 @@ const CreatorProfilPage = () => {
 
 // Params
   const { username } = useParams();
-
-// Redux 
+  
+  // Redux 
   const listSub = useAppSelector(state => state.context.subsList)
-
+  const listFav = useAppSelector(state => state.context.favoritesList)
+  
+  const dispatch = useAppDispatch()
 // State
   const [creatorInfos, setCreatorInfos] = useState<creatorInfos>()
   const [creatorImage, setCreatorImage] = useState<any>()
+  const [isCreatorInFavList, setIsCreatorInFavList] = useState<boolean>(false) 
+  const [isCreatorInSubList, setIsCreatorInSubList] = useState<boolean>(false)
 
 // Api
   const getUserByUsernameApi = useApi(users.getUserByUsername)
   const publicationListApi = useApi(publications.getOneUsersPublications)
   const creatorPictureApi = useApi(users.getCreatorPicture)
+  const createSubscritpionApi = useApi(users.createSubscritpion)
 
 // Effects
+  useEffect(() => {
+    const isInFavList = listFav?.find(creator => creator.username == username)
+    setIsCreatorInFavList(isInFavList ? true : false)
+
+    const isInSubList = listSub?.find(creator => creator.username == username)
+    setIsCreatorInSubList(isInSubList ? true : false)
+  }, [listFav, listSub])
+  
+
   useEffect(() => {
       getUserByUsernameApi.request(username)
   }, [])
@@ -54,7 +69,8 @@ const CreatorProfilPage = () => {
   useEffect(() => {
     if (getUserByUsernameApi.success) {
       console.log('User trouvé: ', getUserByUsernameApi.data)
-      setCreatorInfos(getUserByUsernameApi.data[0])
+      setCreatorInfos(getUserByUsernameApi.data[0])   
+
     } else if (getUserByUsernameApi.error) {
       console.log('PB')
     }
@@ -88,31 +104,51 @@ const CreatorProfilPage = () => {
     }
   }, [publicationListApi.data, publicationListApi.success, publicationListApi.error])
 
+  useEffect(() => {
+    if(createSubscritpionApi.success){
+      dispatch(addSubsToTheList({
+        id: creatorInfos?.id,
+        username: creatorInfos?.username,
+        displayName: creatorInfos?.displayName,
+        description: creatorInfos?.creator.description
+      }))
+      console.log(`Tu viens de t'abonner à ${username} !`)
+    } else if(createSubscritpionApi.error) {
+      console.log("Erreur [Create Sub]")
+    } 
+  }, [createSubscritpionApi.success, createSubscritpionApi.error])
+
+
 // Functions
-  const handlePostClick = (username: string, publicationId: number) => {
+  const handlePostClick = (username: string, publicationId: number, isVisible: boolean) => {
+    if (!isVisible) return ;
     navigate(`/${username}/post/${publicationId}`)
   }
-
+console.log(publicationListApi.data)
   return (
     <MainContainer>
-        <CustomHeader title='' />
+        <CustomHeader title={`@${username}`} />
         <CreatorProfilHeader
+          isCreatorInFavList={isCreatorInFavList}
+          creatorId={creatorInfos?.id}
+          username={creatorInfos?.username}
           description={creatorInfos?.creator.description}
           displayName={creatorInfos?.displayName} 
           creatorImage={creatorImage} />
-        <div style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: 10, marginBottom: 20}}>
           <CustomButton
             icon={<FaLock size={13} color='white' style={{ marginRight: 15 }} />}
             title="S'abonner à ce créateur" 
-            onClick={() => null} />
+            onClick={() => createSubscritpionApi.request(creatorInfos?.id)} />
         </div>
         <ContentType />
         {publicationListApi.data.map((post: any) => (
             <PostCard
+            key={post.id}
             publicationId={post.id}
             source={undefined}
             username={post.author.username}
-            visible={true}
+            visible={post.visible}
             displayName={post.author.displayName}
             comments={post.nbComments}
             likes={post.nbLikes}
@@ -121,7 +157,7 @@ const CreatorProfilPage = () => {
             nbPictures={post.nbPictures}
             date={post.creationDate}
             authorId={post.author.id}
-            onClick={() => handlePostClick(post.author.username, post.id)}
+            onClick={() => handlePostClick(post.author.username, post.id, post.visible)}
         />
         ))}
     </MainContainer>

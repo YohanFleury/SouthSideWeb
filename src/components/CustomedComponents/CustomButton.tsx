@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import colors from '../../config/colors';
 import CustomText from './CustomText';
 
@@ -9,13 +9,15 @@ interface Props {
     icon?: any;
     disabled?: boolean,
     loading?: boolean,
-  }
+    buttonStyle?: React.CSSProperties, // Nouvelle prop pour le style du bouton
+    textStyle?: React.CSSProperties, // Nouvelle prop pour le style du texte
+}
 
-const CustomButton: React.FC<Props> = ({ title, onClick, icon, disabled = false, loading = false,  }) => {
+const CustomButton: React.FC<Props> = ({ title, onClick, icon, disabled = false, loading = false, buttonStyle, textStyle }) => {
   return (
-    <StyledButton onClick={onClick} style={{backgroundColor: disabled ? colors.medium : '#1E6CD0'}} >
+    <StyledButton onClick={onClick} style={{...buttonStyle, backgroundColor: disabled ? '#042145' : '#1E6CD0'}} >
         {icon}
-        <CustomText style={{fontSize: 'clamp(16px, 2vw, 20px)'}}>{title}</CustomText>
+        <CustomText style={{...textStyle, fontSize: textStyle?.fontSize || 'clamp(16px, 2vw, 20px)'}}>{title}</CustomText>
     </StyledButton>
   )
 }
@@ -23,11 +25,12 @@ const CustomButton: React.FC<Props> = ({ title, onClick, icon, disabled = false,
 const StyledButton = styled.div`
   padding: 10px;
   width: 60%;
-  border-radius: 25px;
+  border-radius: 20px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `;
 
 export default CustomButton

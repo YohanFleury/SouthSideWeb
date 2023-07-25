@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import {  CustomText } from '../CustomedComponents';
 import { FiCheckCircle } from "react-icons/fi";
@@ -7,19 +7,73 @@ import colors from '../../config/colors';
 import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
 import { BiBell } from "react-icons/bi";
 import { BiMessageDetail } from "react-icons/bi";
+import useApi from '../../hooks/useApi/useApi';
+import users from '../../api/users';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { addCreatorToFavList, deleteCreatorFromFavList } from '../../redux/contextSlice/contextSlice';
 
 interface CreatorProfilHeaderProps {
     creatorImage: string;
     displayName?: string;
     description?: string;
+    creatorId?: number;
+    username?: string;
+    isCreatorInFavList: boolean;
 }
 
-const CreatorProfilHeader = ({ creatorImage, displayName, description,  }: CreatorProfilHeaderProps) => {
+const CreatorProfilHeader = ({ creatorImage, displayName, description, creatorId, username, isCreatorInFavList}: CreatorProfilHeaderProps) => {
+  // Redux
+  const dispatch = useAppDispatch()
+  
+  // State
+  
+  // Api
+  const addCreatorToFavorites = useApi(users.addCreatorToFavorites)
+  const deleteCreatorFromFavorites = useApi(users.deleteCreatorFromFavorites)
+
+  // Effects
+
+
+  useEffect(() => {
+    if(addCreatorToFavorites.success) {
+      console.log(`${username} a bien été ajouté aux favoris`)
+      dispatch(addCreatorToFavList({
+        description: description,
+        displayName: displayName,
+        id: creatorId,
+        username: username
+      }))
+    } else if(addCreatorToFavorites.error) {
+      console.log('Un problème est survenu : [AddFavorites].')
+    }
+  }, [addCreatorToFavorites.success, addCreatorToFavorites.error])
+
+  useEffect(() => {
+    if(deleteCreatorFromFavorites.success) {
+      console.log(`${username} a bien été supprimé des favoris`)
+      dispatch(deleteCreatorFromFavList(creatorId))
+    } else if(deleteCreatorFromFavorites.error) {
+      console.log('Un problème est survenu : [DeleteFavorites].')
+    }
+  }, [deleteCreatorFromFavorites.success, deleteCreatorFromFavorites.error])
+
+  // Functions
+  const handleFavorites = () => {
+    console.log('cliked')
+    if(isCreatorInFavList) {
+      deleteCreatorFromFavorites.request(creatorId)
+    } else {
+      addCreatorToFavorites.request(creatorId)
+    }
+  }
   return (
     <ImageBackground img={creatorImage}>
         <IconsContainer> 
-          <SingleIconContainer>
-            <IoMdHeartEmpty size={23} color='white' />
+          <SingleIconContainer onClick={handleFavorites}>
+            {!isCreatorInFavList &&
+            <IoMdHeartEmpty size={23} color='white' />}
+            {isCreatorInFavList &&
+            <IoMdHeart size={23} color={colors.dark.primary} />}
           </SingleIconContainer>
           <SingleIconContainer>
             <BiBell size={23} color='white' />
@@ -87,7 +141,6 @@ const IconsContainer = styled.div`
   right: 10px;
   top: 100px;
   height: 200px;
-  z-index: 100;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -101,6 +154,7 @@ const SingleIconContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 `;
 
 const NamingContainer = styled.div`

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-
+import {Publication} from '../publicationsSlice/publicationsSlice';
 
 type subs = {
     id: number,
@@ -31,11 +31,12 @@ interface initialStateProps {
     isUserEmailVerified: boolean;
     subsList: subList;
     favoritesList: subList;
-    savedPublicationsList: any[];
+    savedPublicationsList: Publication[];
     postPosted: boolean;
     contentType: 'posts' | 'medias' | 'videos' | 'lives';
     responsesArray: any[];
     openPublicationId: number | null;
+    openNewPostModal: boolean;
 }
 
 export const initialState: initialStateProps = {
@@ -62,7 +63,8 @@ export const initialState: initialStateProps = {
     postPosted: false,
     contentType: 'posts',
     responsesArray: ["", "", "", ""],
-    openPublicationId: null
+    openPublicationId: null,
+    openNewPostModal: false
 }
 
 export const contextSlice = createSlice({
@@ -178,6 +180,12 @@ export const contextSlice = createSlice({
         setcloseModal: (state) => {
             state.openPublicationId = null;
         },
+        setOpenNewPostModal: (state) => {
+            state.openNewPostModal = true;
+        },
+        setCloseNewPostModal: (state) => {
+            state.openNewPostModal = false;
+        }
     }
 })
 
@@ -209,7 +217,9 @@ export const {
     removeOneLikeToPublication,
     setResponsesArray,
     setcloseModal,
-    setopenModal
+    setopenModal,
+    setOpenNewPostModal,
+    setCloseNewPostModal
 } = contextSlice.actions
 
 export default contextSlice.reducer

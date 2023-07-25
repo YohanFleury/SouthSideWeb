@@ -46,6 +46,7 @@ const PostCardHeader = ({
 
 
     const [profilPicture, setProfilPicture] = useState<any>()
+    const [saveTitle, setSaveTitle] = useState<string>('Enregistrer')
 
     const savedPublicationsList = useAppSelector(state => state.context.savedPublicationsList)
     const openPublicationId = useAppSelector(state => state.context.openPublicationId)
@@ -63,6 +64,15 @@ const PostCardHeader = ({
     useEffect(() => {
         getProfilPictureApi.request(authorId)
     }, [])
+
+    useEffect(() => {
+        const find = savedPublicationsList.find(publication => publication.id == publicationId)
+        if(find) {
+            setSaveTitle('Enlever des signets')
+        } else {
+            setSaveTitle('Enregistrer')
+        }
+    }, [savedPublicationsList])
 
     useEffect(() => {
         if(getProfilPictureApi.success) {
@@ -137,24 +147,30 @@ const PostCardHeader = ({
             {isModalOpen &&
                 <MyModal>
                     {currentUser.id !== authorId && 
-                    <MenuItem onClick={handleDelete}><CustomText style={{fontSize: '15px'}}>Signaler</CustomText></MenuItem>}
+                    <MenuItem onClick={handleReport}><CustomText style={{fontSize: '15px'}}>Signaler</CustomText></MenuItem>}
                     {currentUser.id === authorId &&
                     <MenuItem onClick={handleDelete}><CustomText style={{fontSize: '15px'}}>Supprimer</CustomText></MenuItem>}
-                    <MenuItem onClick={handleSave}><CustomText style={{fontSize: '15px'}}>Ajouter aux signets</CustomText></MenuItem>
+                    <MenuItem onClick={handleSave}><CustomText style={{fontSize: '15px'}}>{saveTitle}</CustomText></MenuItem>
                 </MyModal>
             }
-                <ProfilInfos onClick={(event: any) => {
+                <ProfilInfos>
+                    <div style={{display: 'flex', flexDirection: 'row', flex: 10}}>
+                        <ProfilPicture 
+                            size={40}
+                            source={`data:image/jpg;base64,${profilPicture}`}
+                            onPress={(event: any) => {
+                                event.stopPropagation();
+                                if (onPpPress) {
+                                    onPpPress();
+                                }
+                            }} 
+                        />      
+                        <TextContainer onClick={(event: any) => {
                                 event.stopPropagation();
                                 if (onPpPress) {
                                     onPpPress();
                                 }
                             }} >
-                    <div style={{display: 'flex', flexDirection: 'row', flex: 10}}>
-                        <ProfilPicture 
-                            size={40}
-                            source={`data:image/jpg;base64,${profilPicture}`}
-                        />      
-                        <TextContainer>
                             <CustomText style={{fontSize: '15px', fontWeight: 'bold', marginTop: '5px'}}>{displayName}</CustomText>
                             <CustomText style={{fontSize: '13px', color: colors.medium}}>{`@${username}`}</CustomText>
                         </TextContainer>
@@ -164,7 +180,10 @@ const PostCardHeader = ({
                     <MdMoreHoriz 
                         size={21} 
                         color="white"
-                        onClick={() => dispatch(setopenModal(publicationId))} />
+                        onClick={(event: any) => {
+                            event.stopPropagation();
+                            dispatch(setopenModal(publicationId))}
+                        } />
                     {date && <CustomText style={{fontSize: '12px', color: colors.medium}}>{convertTimeFormat(date)}</CustomText>}
                 </TimeContainer>
             </Header>

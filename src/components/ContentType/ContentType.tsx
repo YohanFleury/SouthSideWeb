@@ -5,10 +5,11 @@ import colors from '../../config/colors';
 
 const ContentDiv = styled.div`
   display: flex;
+  background-color: rgba(0, 0, 0, 0.5);
   justify-content: space-between;
-  padding: 20px;
+  padding: 0 10px;
   position: sticky;
-  top: 30px;
+  top: 50px;
   z-index: 15;
 `;
 

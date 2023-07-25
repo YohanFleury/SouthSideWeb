@@ -25,8 +25,6 @@ const CreatorCard: React.FC<MyCreatorCardProps> = ({ name, isVerified = true, us
   };
 
   const handleMouseMove = () => {
-    // Si l'utilisateur déplace la souris tout en maintenant le bouton enfoncé,
-    // nous considérons cela comme un défilement
     setIsDragging(true);
   };
 
@@ -58,19 +56,20 @@ const CreatorCard: React.FC<MyCreatorCardProps> = ({ name, isVerified = true, us
       
     
   return (
-    <ImageBackground onMouseDown={handleMouseDown}
-    onMouseMove={handleMouseMove}
-    onMouseUp={handleMouseUp} img={creatorPicture} >
+    <ImageBackground 
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp} img={creatorPicture} >
         <GradientDiv>
             <NamingContainer>
-                <CustomText style={{fontSize: 22}}>{name}</CustomText>
+                <CustomText style={{fontSize: '1em'}}>{name}</CustomText>
                 <FiCheckCircle size={18} color='white' style={{marginLeft: 5}} />
             </NamingContainer>
             <UserNameContainer>
-                <CustomText style={{fontSize: 11,}}>{`@${username}`}</CustomText>
+                <CustomText style={{fontSize: '0.8em',}}>{`@${username}`}</CustomText>
             </UserNameContainer>
             <CategoriesContainer>
-                <CustomText style={{fontSize: 11, marginRight: 12}}>Podcast, Sport</CustomText>
+                <CustomText style={{fontSize: '0.8em', marginRight: '1em'}}>Podcast, Sport</CustomText>
             </CategoriesContainer>
             {isVerified &&
                 <TfiMedall size={16} color={colors.dark.primary} style={{ position: 'absolute', bottom: '0%', right: "0%"}} />
@@ -85,17 +84,16 @@ interface ImageBackgroundProps {
     onClick?: () => void;
   }
 
-const ImageBackground = styled.div<ImageBackgroundProps>`
+  const ImageBackground = styled.div<ImageBackgroundProps>`
   background-image: url(${({img}: any) => `data:image/jpg;base64,${img}`});
   height: 30vh;
-  width: 30vh;
-
-  
+  min-width: 200px;
+  max-width: 300px;
   background-size: cover;
-  margin: 10px;
+  margin: 1vh;
   display: flex;
   align-items: flex-end;
-  min-width: 270px
+  cursor: pointer;
 `;
 
 const GradientDiv = styled.div`
@@ -114,8 +112,8 @@ const NamingContainer = styled.div`
   justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
-  padding-left: 5px;
-  padding-rigth: 5px;
+  padding-left: 0.5em;
+  padding-rigth: 0.5em;
 `;
 
 const UserNameContainer = styled.div`

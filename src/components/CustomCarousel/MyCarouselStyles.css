@@ -1,0 +1,14 @@
+
+
+.carousel .control-dots .dot {
+    width: 6px; 
+    height: 6px; 
+}
+
+.carousel .control-dots, .carousel .thumbs-wrapper {
+    margin: 0 !important;
+}
+
+.mycarousel-item {
+    margin-right: 10px !important; /* Changez cette valeur selon vos besoins */
+  }
