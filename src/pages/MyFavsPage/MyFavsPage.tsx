@@ -37,6 +37,7 @@ const MainContainer = styled.div`
   border-right: 0.5px solid ${colors.lightDark};
   margin: auto;
   position: relative;
+  min-height: 800px;
 `;
 export default MyFavsPage
 

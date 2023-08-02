@@ -2,15 +2,14 @@ import React, { useState } from 'react'
 import { CustomText } from '../CustomedComponents'
 import styled from 'styled-components';
 import colors from '../../config/colors';
+import { useAppDispatch } from '../../redux/store';
+import { setContentType } from '../../redux/contextSlice/contextSlice';
 
 const ContentDiv = styled.div`
   display: flex;
-  background-color: rgba(0, 0, 0, 0.5);
   justify-content: space-between;
-  padding: 0 10px;
-  position: sticky;
-  top: 50px;
-  z-index: 15;
+  padding: 5px 10px;
+  width: 80%;
 `;
 
 interface StyledMenuProps {
@@ -23,24 +22,27 @@ const StyledMenu = styled.div<StyledMenuProps>`
 `;
 
 const ContentType = () => {
-  const [selectedMenu, setSelectedMenu] = useState("Accueil");
+  const dispatch = useAppDispatch()
+
+  const [selectedMenu, setSelectedMenu] = useState("home");
 
   const handleMenuClick = (menu: string) => {
     setSelectedMenu(menu);
+    dispatch(setContentType(menu))
   }
 
   return (
     <ContentDiv>
-        <StyledMenu onClick={() => handleMenuClick("Accueil")} selected={selectedMenu === "Accueil"}>
+        <StyledMenu onClick={() => handleMenuClick("home")} selected={selectedMenu === "home"}>
             <CustomText style={{ fontSize: 'clamp(17px, 2.2vw, 19px)'}}>Accueil</CustomText>
         </StyledMenu>
-        <StyledMenu onClick={() => handleMenuClick("Medias")} selected={selectedMenu === "Medias"}>
+        <StyledMenu onClick={() => handleMenuClick("medias")} selected={selectedMenu === "medias"}>
             <CustomText style={{ fontSize: 'clamp(17px, 2.2vw, 19px)'}}>Medias</CustomText>
         </StyledMenu>
-        <StyledMenu onClick={() => handleMenuClick("Videos")} selected={selectedMenu === "Videos"}>
+        <StyledMenu onClick={() => handleMenuClick("videos")} selected={selectedMenu === "videos"}>
             <CustomText style={{ fontSize: 'clamp(17px, 2.2vw, 19px)'}}>Videos</CustomText>
         </StyledMenu>
-        <StyledMenu onClick={() => handleMenuClick("Lives")} selected={selectedMenu === "Lives"}>
+        <StyledMenu onClick={() => handleMenuClick("lives")} selected={selectedMenu === "lives"}>
             <CustomText style={{ fontSize: 'clamp(17px, 2.2vw, 19px)'}}>Lives</CustomText>
         </StyledMenu>
     </ContentDiv>

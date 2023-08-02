@@ -14,7 +14,8 @@ export type Publication = {
     visible: boolean;
     creationDate: any;
     nbPictures: number;
-    responses?: any[]
+    responses?: any[];
+    pictureUrls: string[];
 }
 
 interface initialStateProps {

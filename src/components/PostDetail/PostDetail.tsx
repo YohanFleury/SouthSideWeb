@@ -114,6 +114,7 @@ const addComment = () => {
           liked={publication.liked}
           description={publication.content}
           nbPictures={publication.nbPictures}
+          images={publication.pictureUrls}
           date={publication.creationDate}
           authorId={publication.author.id}
         />}

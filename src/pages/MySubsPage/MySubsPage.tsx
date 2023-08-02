@@ -19,7 +19,7 @@ const MySubsPage = () => {
           }
           {
               subsList.length === 0 &&
-              <CustomText>Aucun abonnement !</CustomText>
+              <CustomText style={{margin: 30}}>Vous n'avez aucun abonnement pour le moment !</CustomText>
           }
       </MainContainer>
     )
@@ -34,6 +34,7 @@ const MainContainer = styled.div`
   border-right: 0.5px solid ${colors.lightDark};
   margin: auto;
   position: relative;
+  min-height: 800px;
 `;
 
 export default MySubsPage

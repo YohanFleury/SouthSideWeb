@@ -46,8 +46,6 @@ const MainContainer = styled.div`
   width: 100%;
   height: 100%;
   border-left: 0.2px solid ${colors.lightDark};
-  border-right: 0.2px solid ${colors.lightDark};
-  overflow-x: hidden;
 `;
 
 export default RoutesPath;

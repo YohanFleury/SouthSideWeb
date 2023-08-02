@@ -13,7 +13,8 @@ import PostCard from '../../components/PostCard/PostCard';
 import CreatorProfilHeader from '../../components/CreatorProfilHeader/CreatorProfilHeader';
 import ContentType from '../../components/ContentType/ContentType';
 import { useNavigate } from 'react-router-dom';
-import { addSubsToTheList } from '../../redux/contextSlice/contextSlice';
+import { addSubsToTheList, setContentType } from '../../redux/contextSlice/contextSlice';
+import CreatorsMedias from '../../components/CreatorsMedias/CreatorsMedias';
 
 type creatorInfos = {
   account: any;
@@ -38,7 +39,7 @@ const CreatorProfilPage = () => {
   // Redux 
   const listSub = useAppSelector(state => state.context.subsList)
   const listFav = useAppSelector(state => state.context.favoritesList)
-  
+  const contentType = useAppSelector(state => state.context.contentType)
   const dispatch = useAppDispatch()
 // State
   const [creatorInfos, setCreatorInfos] = useState<creatorInfos>()
@@ -64,6 +65,7 @@ const CreatorProfilPage = () => {
 
   useEffect(() => {
       getUserByUsernameApi.request(username)
+      dispatch(setContentType('home'))
   }, [])
   
   useEffect(() => {
@@ -127,7 +129,6 @@ const CreatorProfilPage = () => {
 console.log(publicationListApi.data)
   return (
     <MainContainer>
-        <CustomHeader title={`@${username}`} />
         <CreatorProfilHeader
           isCreatorInFavList={isCreatorInFavList}
           creatorId={creatorInfos?.id}
@@ -135,18 +136,19 @@ console.log(publicationListApi.data)
           description={creatorInfos?.creator.description}
           displayName={creatorInfos?.displayName} 
           creatorImage={creatorImage} />
-        <div style={{display: 'flex', justifyContent: 'center', marginTop: 10, marginBottom: 20}}>
+        <div style={{display: 'flex', marginTop: 10, marginBottom: 20, width: '80%', justifyContent: 'center'}}>
           <CustomButton
             icon={<FaLock size={13} color='white' style={{ marginRight: 15 }} />}
             title="S'abonner à ce créateur" 
             onClick={() => createSubscritpionApi.request(creatorInfos?.id)} />
         </div>
         <ContentType />
-        {publicationListApi.data.map((post: any) => (
+        { contentType === "home" &&
+        publicationListApi.data.map((post: any) => (
             <PostCard
             key={post.id}
             publicationId={post.id}
-            source={undefined}
+            images={post.pictureUrls}
             username={post.author.username}
             visible={post.visible}
             displayName={post.author.displayName}
@@ -160,6 +162,10 @@ console.log(publicationListApi.data)
             onClick={() => handlePostClick(post.author.username, post.id, post.visible)}
         />
         ))}
+        {
+          contentType === 'medias' &&
+          <CreatorsMedias data={publicationListApi.data} /> 
+        }
     </MainContainer>
   )
 }
@@ -170,9 +176,9 @@ display: flex;
 flex-direction: column;
 flex: 1;
 border-left: 0.5px solid ${colors.lightDark};
-border-right: 0.5px solid ${colors.lightDark};
 margin: auto;
 position: relative;
+min-height: 1500px;
 `;
 
 export default CreatorProfilPage

@@ -31,7 +31,7 @@ export interface PostCardProps {
     displayName: string;
     onTipsPress?: () => void;
     onPpPress?: () => void;
-    source?: any;
+    images: string[]; 
     publicationId: number;
     date: string | undefined;
     authorId: number;
@@ -74,7 +74,7 @@ const PostCard = ({
     comments,
     onTipsPress, 
     onPpPress,
-    source,
+    images,
     publicationId,
     date,
     authorId,
@@ -89,6 +89,7 @@ const [lastPress, setLastPress] = useState<number>(0);
 const [numberLikes, setNumberLikes] = useState<number>(likes)
 const [isCreatorInSubList, setIsCreatorInSubList] = useState<boolean>(false)
 const [hasUserAccesToThePost, setHasUserAccesToThePost] = useState(!visible ? isCreatorInSubList : true)
+
 // Redux 
 const dispatch = useAppDispatch()
 const theme = useAppSelector(state => state.context.theme)
@@ -97,7 +98,6 @@ const listSub = useAppSelector(state => state.context.subsList)
 
 const isPostModalOpen = openPublicationId === publicationId
 // API
-const getPublicationPicturesApi = useApi(publications.getPublicationPictures)
 const addLikeApi = useApi(publications.addLike)
 const deleteLikeApi = useApi(publications.deleteLike)
 
@@ -108,23 +108,6 @@ useEffect(() => {
   setIsCreatorInSubList(isInSubList ? true : false)
 }, [listSub])
 
-useEffect(() => {
-    if(nbPictures > 0) {
-        getPublicationPicturesApi.request(publicationId, 0);
-    }
-}, [])
-
-useEffect(() => {
-  if(getPublicationPicturesApi.success) {
-        settestImages(prevImages => 
-            prevImages.map((img, index) => index === lastFetchedIndex 
-                ? arrayBufferToBase64(getPublicationPicturesApi.data) 
-                : img)
-          )
-  } else if(getPublicationPicturesApi.error) {
-    //console.log(`Problème sur la publication ${publicationId} [Main Picture]`)
-  }
-}, [getPublicationPicturesApi.success, getPublicationPicturesApi.error, getPublicationPicturesApi.data])   
 
 useEffect(() => {
   if (addLikeApi.success) {
@@ -140,13 +123,6 @@ useEffect(() => {
     }
   }, [deleteLikeApi.success])
 // Functions
-
-const handleIndexChanged = useCallback((index: number) => {
-    if (!testImages[index]) {
-        getPublicationPicturesApi.request(publicationId, index);
-        setLastFetchedIndex(index);
-    }
-    }, [lastFetchedIndex, testImages]);
 
 const handleDoublePress = () => {
     const time = new Date().getTime();
@@ -183,16 +159,15 @@ const handleDislike = () => {
                 description={description}
                 isSurvey={false}
                 />
-                {testImages.length > 0 &&
+                {images.length > 0 &&
                     <Carousel 
                       renderArrowPrev={CustomArrowPrev}
                       renderArrowNext={CustomArrowNext}
                       showStatus={false} 
-                      showIndicators={testImages.length < 2 ? false : true}
-                      onChange={handleIndexChanged}>
-                      {testImages.map((image, index) => (
+                      showIndicators={testImages.length < 2 ? false : true}>
+                      {images.map((image, index) => (
                           <ImageContainer  onDoubleClick={handleDoublePress}>
-                              <Image key={index} src={`data:image/jpg;base64,${image}`} />
+                              <Image key={index} src={image} />
                           </ImageContainer>
                       ))}
                     </Carousel>
@@ -253,15 +228,16 @@ const MainContainer = styled.div`
   padding-right: 20px;
   padding-top: 10px;
   padding-bottom: 10px;
-  max-width: 100%;
-  border-bottom: 1px solid ${colors.lightDark};
-`;
-
-const Container = styled.div`
+  max-width: 80%;
+  `;
+  
+  const Container = styled.div`
   overflow: hidden;
   flex: 1;
   position: relative;
   width: 100%;
+  border-bottom: 1px solid ${colors.lightDark};
+  padding-bottom: 10px
 `;
 
 const ImageContainer = styled.div`
@@ -269,17 +245,18 @@ const ImageContainer = styled.div`
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  height: auto; /* Remplacez par la hauteur maximale souhaitée */
+  height: auto; 
   margin-top: 10px;
-  max-height: 100%;
+  max-height: 650px;
   max-width: 100%;
+  border-radius: 10px;
 `;
 
 const Image = styled.img`
-  width: 100%;   // Change to 100%
-  height: 100%;  // Change to 100%
+  width: 100%;   
+  height: 100%;  
   object-fit: contain;  // Add this line
-  border-radius: 10px;
+  
 `;
 
 

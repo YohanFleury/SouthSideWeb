@@ -53,12 +53,14 @@ const HomePage = () => {
 
   return (
     <MainContainer>
-        <CustomHeader title='Accueil' />
+        <div style={{width: '83%'}}>
+         <CustomHeader title='Accueil' />
+        </div>
         {feedList.map(post => (
             <PostCard
             key={post.id}
             publicationId={post.id}
-            source={undefined}
+            images={post.pictureUrls}
             username={post.author.username}
             visible={true}
             displayName={post.author.displayName}
@@ -80,7 +82,6 @@ const HomePage = () => {
 const MainContainer = styled.div`
   background-color: ${colors.dark.background};
   border-left: 0.5px solid ${colors.lightDark};
-  border-right: 0.5px solid ${colors.lightDark};
   display: flex;
   flex-direction: column;
   flex: 1;

@@ -2,40 +2,14 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { CustomHeader, CustomInput, CustomText } from '../../components/CustomedComponents';
 import users from '../../api/users';
-import CreatorCard from '../../components/CreatorCard/CreatorCard';
 import colors from '../../config/colors';
 import useApi from '../../hooks/useApi/useApi';
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
 
-import djj from '../../assets/djjj.jpg'
-import emi from '../../assets/emi.jpg'
-import maxime from '../../assets/maxime.jpg'
-import pablo from '../../assets/pablo.jpeg'
 import CustomCarousel from '../../components/CustomCarousel/CustomCarousel';
+import ResearchResult from '../../components/ResearchResults/ResearchResults';
+import { currentUser } from '../../redux/contextSlice/contextSlice';
 
-const responsive = {
-  largeDesktop: {
-    breakpoint: { max: 3000, min: 1224 },
-    items: 2,
-    slidesToSlide: 1
-  },
-  desktop: {
-    breakpoint: { max: 1223, min: 700 },
-    items: 2,
-    slidesToSlide: 1
-  },
-  tablet: {
-    breakpoint: { max: 699, min: 464 },
-    items: 2,
-    slidesToSlide: 1
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 1,
-    slidesToSlide: 1
-  }
-};
+import { MdClose } from 'react-icons/md';
 
 
 const ResearchPage = () => {
@@ -69,7 +43,7 @@ const ResearchPage = () => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTextSearch(event.target.value);
   };
-
+console.log('Recherche: ', getCreatorByUsernameAndDisplaynameApi.data)
   return (
     <MainContainer>
       <CustomHeader title='Recherche' />
@@ -79,15 +53,41 @@ const ResearchPage = () => {
           onChange={handleChange} 
           value={textSearch}
         />
+        {textSearch.length > 0 &&
+        <MdClose 
+          onClick={() => setTextSearch('')}
+          style={{position: 'absolute', right: 25, cursor: 'pointer'}} 
+          size={22} 
+          color='white' />}
       </InputContainer>
-      <div style={{margin: 10, marginTop: 20}}>
+      {textSearch.length > 0 &&
+      <ResearchResults>
+        {!getCreatorByUsernameAndDisplaynameApi.loading &&
+          getCreatorByUsernameAndDisplaynameApi.data.map((creator: currentUser) => (
+            <ResearchResult 
+              key={creator.id} 
+              username={creator.username} 
+              creatorId={creator.id} 
+              displayName={creator.displayName} />
+          ))
+        }
+        {
+          getCreatorByUsernameAndDisplaynameApi.loading &&
+          <CustomText>Chargement ...</CustomText>
+        }
+      </ResearchResults>}
+      {textSearch.length == 0 &&
+       <div style={{margin: 10, marginTop: 20}}>
         <CustomText>Tendances</CustomText>
-      </div>
-      <CustomCarousel creators={getCreatorsApi.data} />
+      </div>}
+      {textSearch.length == 0 &&
+      <CustomCarousel creators={getCreatorsApi.data} />}
+      {textSearch.length == 0 &&
       <div style={{margin: 10, marginTop: 60}}>
         <CustomText>Suggestions</CustomText>
-      </div>
-      <CustomCarousel creators={getCreatorsApi.data} />
+      </div>}
+      {textSearch.length == 0 &&
+      <CustomCarousel creators={getCreatorsApi.data} />}
     </MainContainer>
   )
 }
@@ -102,13 +102,25 @@ const MainContainer = styled.div`
   margin: auto;
   position: relative;
   height: 100%;
+  min-height: 800px;
 `;
 
+const ResearchResults = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-height: 600px;
+  overflow-y: auto;
+
+  @media (max-width: 768px) {
+    max-height: 100vh;
+  }
+`;
 const InputContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 15px;
+  position: relative;
 `;
 
 export default ResearchPage

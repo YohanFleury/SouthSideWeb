@@ -9,7 +9,7 @@ type subs = {
 }
 type subList = subs[]
 
-type currentUser = {
+export type currentUser = {
     creator: {
         certified: boolean,
         description: string,
@@ -33,7 +33,7 @@ interface initialStateProps {
     favoritesList: subList;
     savedPublicationsList: Publication[];
     postPosted: boolean;
-    contentType: 'posts' | 'medias' | 'videos' | 'lives';
+    contentType: 'home' | 'medias' | 'videos' | 'lives';
     responsesArray: any[];
     openPublicationId: number | null;
     openNewPostModal: boolean;
@@ -61,7 +61,7 @@ export const initialState: initialStateProps = {
     favoritesList: [],
     savedPublicationsList: [],
     postPosted: false,
-    contentType: 'posts',
+    contentType: 'home',
     responsesArray: ["", "", "", ""],
     openPublicationId: null,
     openNewPostModal: false

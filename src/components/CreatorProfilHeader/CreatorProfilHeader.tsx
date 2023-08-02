@@ -113,7 +113,7 @@ interface ImageBackgroundProps {
 const ImageBackground = styled.div<ImageBackgroundProps>`
   background-image: url(${({img}: any) => `data:image/jpg;base64,${img}`});
   width: 100%;
-  height: 30vh;
+  height: 50vh;
 
   @media (min-width: 768px) {
     height: 60vh

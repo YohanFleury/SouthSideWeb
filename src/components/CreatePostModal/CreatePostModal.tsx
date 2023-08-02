@@ -53,6 +53,7 @@ const CreatePostModal = () => {
   const [isDisabled, setIsDisabled] = useState<boolean>(true)
   const [imagesChoosen, setImagesChoosen] = useState<any[]>([])
   const [isPublic, setIsPublic] = useState<boolean>(false)
+  const [pictureFiles, setPictureFiles] = useState<any[]>([])
 
   // Ref
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -67,6 +68,7 @@ const CreatePostModal = () => {
   const getProfilPictureApi = useApi(users.getProfilPicture)
   const createSurveyApi = useApi(publications.createSurvey)
   const createPublicationApi = useApi(publications.createPublication)
+  const addImageToPublicationApi = useApi(publications.addImageToPublication)
 
   // Effects
 
@@ -99,6 +101,20 @@ const CreatePostModal = () => {
     }
 }, [getProfilPictureApi.success, getProfilPictureApi.error, getProfilPictureApi.data])
 
+  useEffect(() => {
+    if (createPublicationApi.success) {
+      console.log('La publication a été prise en compte !')
+      if (pictureFiles.length > 0) {
+        pictureFiles.map((imageInfos: any,) => {
+          addImageToPublicationApi.request(createPublicationApi.data.id, imageInfos.type, imageInfos.file)
+      })
+      }
+    } else if (createPublicationApi.error) {
+      console.log('Un problème est survenu avec la publication.')
+    }
+  }, [createPublicationApi.success, createPublicationApi.error])
+  
+  // Functions
   const closeModal = () => {
     dispatch(setCloseNewPostModal())
     setImagesChoosen([])
@@ -118,7 +134,12 @@ const CreatePostModal = () => {
     if (event.target.files) {
       const file = event.target.files[0]; 
       const reader = new FileReader();
-  
+      
+      setPictureFiles(prevFile => [...prevFile, {
+        file: file,
+        type: file.type.split("/").pop()
+      }])
+
       reader.onloadend = function(e) {
         if (e.target?.readyState === FileReader.DONE) {
           setImagesChoosen(prevImages => [...prevImages, String(reader.result)]);
@@ -130,9 +151,6 @@ const CreatePostModal = () => {
       }
     }
 };
-
-  
-  
 
   const handleSurvey = () => {
     setIsSurvey(x => !x)
@@ -154,6 +172,7 @@ const CreatePostModal = () => {
         createPublicationApi.request(content, isPublic, currentUser.id)
     }
     setContent('')
+    closeModal()
 }
 
 const handleDeleteImage = (index: number) => {
@@ -213,7 +232,7 @@ const handleDeleteImage = (index: number) => {
         {imagesChoosen.length > 0 &&
         <ImagesContainer>
         {imagesChoosen.map((image, index) => (
-          <ImageWrapper>
+          <ImageWrapper key={index}>
             <DeleteImageContainer onClick={() => handleDeleteImage(index)}>
               <AiOutlineClose size={15} color="white" />
             </DeleteImageContainer>

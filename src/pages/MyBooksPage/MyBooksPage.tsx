@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
-import { CustomHeader } from '../../components/CustomedComponents';
+import { CustomHeader, CustomText } from '../../components/CustomedComponents';
 import PostCard from '../../components/PostCard/PostCard';
 import colors from '../../config/colors';
 import { useAppSelector } from '../../redux/store';
@@ -25,7 +25,7 @@ const MyBooksPage = () => {
             <PostCard
             key={post.id}
             publicationId={post.id}
-            source={undefined}
+            images={post.pictureUrls}
             username={post.author.username}
             visible={true}
             displayName={post.author.displayName}
@@ -40,6 +40,11 @@ const MyBooksPage = () => {
             onClick={() => handlePostClick(post.author.username, post.id)}
           />
         ))}
+
+          {   
+            savedPublicationsList.length === 0 &&
+            <CustomText style={{margin: 30}}>Vous n'avez aucune publication enregistrée pour le moment !</CustomText>
+          }
     </MainContainer>
   )
 }
@@ -53,6 +58,7 @@ const MainContainer = styled.div`
   border-right: 0.5px solid ${colors.lightDark};
   margin: auto;
   position: relative;
+  min-height: 800px;
 `;
 
 export default MyBooksPage
