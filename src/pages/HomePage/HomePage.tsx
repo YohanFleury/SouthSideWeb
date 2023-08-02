@@ -50,7 +50,7 @@ const HomePage = () => {
   const handlePostClick = (username: string, publicationId: number) => {
     navigate(`/${username}/post/${publicationId}`)
   }
-
+console.log("env  : ", process.env.NODE_ENV)
   return (
     <MainContainer>
         <div style={{width: '83%'}}>

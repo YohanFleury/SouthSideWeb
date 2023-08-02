@@ -2,7 +2,7 @@ import { create } from 'apisauce'
 
 
 const apiClient = create({
-   baseURL: 'http://192.168.1.17:8080/shareskillsapi/v1',
+   baseURL: process.env.NODE_ENV === "development" ? 'http://192.168.1.17:8080/shareskillsapi/v1' : 'http://LB-PronosAPI-193411774.eu-west-3.elb.amazonaws.com/shareskillsapi/v1',
    timeout: 30000,
    headers: {
       Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRhdGFAZXhhbXBsZS5jb20ifQ.ZxHZBjy_2yRTE9tDVizgoiBTehz7D9DxYIDNYNl8NUw`,
