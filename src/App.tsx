@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { store, useAppDispatch, useAppSelector } from './redux/store';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 import RoutesPath from './routes/RoutesPath';
 import './App.css';
 import Menu from './components/Menu/Menu';

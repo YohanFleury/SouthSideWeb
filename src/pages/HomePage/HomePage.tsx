@@ -54,7 +54,7 @@ console.log("env  : ", process.env.NODE_ENV)
   return (
     <MainContainer>
         <div style={{width: '83%'}}>
-         <CustomHeader title='Accueil' />
+         <CustomHeader title={process.env.NODE_ENV === "development" ? 'Accueil dev': 'Accueil Prod'} />
         </div>
         {feedList.map(post => (
             <PostCard
