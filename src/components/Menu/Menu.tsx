@@ -35,7 +35,7 @@ const Menu = () => {
         <IconContainer>
           {pathname === "/" &&
           <RouteSelector />}
-          <MdOutlineHome  style={{ minHeight: 29, minWidth:29}} size={24} color='white'  />
+          <MdOutlineHome size={24} color='white'  />
         </IconContainer>
         <ResponsiveText>
         <ItemTitle>
@@ -49,7 +49,7 @@ const Menu = () => {
           <IconContainer>
           {pathname === "/research" &&
             <RouteSelector />}
-            <FaSistrix style={{  minHeight: 26, minWidth:26}} color='white' size={24} />
+            <FaSistrix color='white' size={24} />
           </IconContainer>
           <ResponsiveText>
           <ItemTitle>
@@ -63,7 +63,7 @@ const Menu = () => {
           <IconContainer>
             {pathname === "/notifications" &&
               <RouteSelector />}
-              <BiBell style={{  minHeight: 29, minWidth:29}} color='white' size={24}/>
+              <BiBell color='white' size={24}/>
           </IconContainer>
           <ResponsiveText>
           <ItemTitle>
@@ -78,7 +78,7 @@ const Menu = () => {
           <IconContainer>
             {pathname === "/chat" &&
               <RouteSelector />}
-              <BiMessageDetail style={{  minHeight: 29, minWidth:29}} color='white' size={24}/>
+              <BiMessageDetail color='white' size={24}/>
           </IconContainer>
           <ResponsiveText>
           <ItemTitle>
@@ -93,7 +93,7 @@ const Menu = () => {
           <IconContainer>
             {pathname === "/myfavs" &&
               <RouteSelector />}
-              <IoMdHeartEmpty style={{  minHeight: 29, minWidth:29}} color='white' size={24}/>
+              <IoMdHeartEmpty color='white' size={24}/>
           </IconContainer>
           <ResponsiveText>
           <ItemTitle>
@@ -108,7 +108,7 @@ const Menu = () => {
           <IconContainer>
             {pathname === "/mysubs" &&
               <RouteSelector />}
-              <BsPeopleFill style={{  minHeight: 25, minWidth:25}} color='white' size={24}/>
+              <BsPeopleFill color='white' size={24}/>
           </IconContainer>
           <ResponsiveText>
           <ItemTitle>
@@ -123,7 +123,7 @@ const Menu = () => {
           <IconContainer>
             {pathname === "/mybooks" &&
               <RouteSelector />}
-              <BsBookmark style={{  minHeight: 24, minWidth:24}} color='white' size={24}/>
+              <BsBookmark color='white' size={24}/>
           </IconContainer>
           <ResponsiveText>
           <ItemTitle>
@@ -137,7 +137,7 @@ const Menu = () => {
           <IconContainer>
             {pathname === "/wallet" &&
               <RouteSelector />}
-              <IoWalletOutline style={{  minHeight: 27, minWidth:27}} color='white' size={24}/>
+              <IoWalletOutline color='white' size={24}/>
           </IconContainer>
           <ResponsiveText>
           <ItemTitle>
@@ -151,7 +151,7 @@ const Menu = () => {
           <IconContainer>
             {pathname === "/settings" &&
               <RouteSelector />}
-              <FiSettings style={{  minHeight: 25, minWidth:25}} color='white' size={24}/>
+              <FiSettings color='white' size={24}/>
           </IconContainer>
           <ResponsiveText>
           <ItemTitle>
@@ -165,7 +165,7 @@ const Menu = () => {
         <CustomButton title='Publier' onClick={() => dispatch(setOpenNewPostModal())} />
       </ButtonContainer>
       <PostBtn onClick={() => dispatch(setOpenNewPostModal())}>
-        <AiOutlinePlus style={{  minHeight: 26, minWidth:26}} color='white' size={24} />
+        <AiOutlinePlus color='white' size={24} />
       </PostBtn>
       </Container>
     </MainContainer>
