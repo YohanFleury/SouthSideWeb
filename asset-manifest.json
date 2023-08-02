@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/SouthSideWeb/static/css/main.4b9af397.css",
-    "main.js": "/SouthSideWeb/static/js/main.9fe23a0a.js",
+    "main.js": "/SouthSideWeb/static/js/main.7f326a6c.js",
     "static/js/787.6fa5d623.chunk.js": "/SouthSideWeb/static/js/787.6fa5d623.chunk.js",
     "static/media/logoMvp.png": "/SouthSideWeb/static/media/logoMvp.0b1db97520f021c4f0d7.png",
     "static/media/revicons.eot": "/SouthSideWeb/static/media/revicons.a77de540a38981833f9e.eot",
@@ -9,11 +9,11 @@
     "static/media/revicons.woff": "/SouthSideWeb/static/media/revicons.e8746a624ed098489406.woff",
     "index.html": "/SouthSideWeb/index.html",
     "main.4b9af397.css.map": "/SouthSideWeb/static/css/main.4b9af397.css.map",
-    "main.9fe23a0a.js.map": "/SouthSideWeb/static/js/main.9fe23a0a.js.map",
+    "main.7f326a6c.js.map": "/SouthSideWeb/static/js/main.7f326a6c.js.map",
     "787.6fa5d623.chunk.js.map": "/SouthSideWeb/static/js/787.6fa5d623.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.4b9af397.css",
-    "static/js/main.9fe23a0a.js"
+    "static/js/main.7f326a6c.js"
   ]
 }
