@@ -65,8 +65,10 @@ const RedDiv = styled.div`
   }, [getFavoritesListApi.data, getFavoritesListApi.success, getFavoritesListApi.error])
 
   useEffect(() => {
-    dispatch(setSubsList(getSubscriptionsApi.data.subscriptions))
-  }, [getSubscriptionsApi.data])
+    if (getSubscriptionsApi.success) {
+      dispatch(setSubsList(getSubscriptionsApi.data.subscriptions))
+    }
+  }, [getSubscriptionsApi.data, getFavoritesListApi.success, getFavoritesListApi.error])
 
   useEffect(() => {
     const language = navigator.language.split("-")[0]
