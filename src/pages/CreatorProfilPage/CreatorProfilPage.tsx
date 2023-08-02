@@ -15,6 +15,7 @@ import ContentType from '../../components/ContentType/ContentType';
 import { useNavigate } from 'react-router-dom';
 import { addSubsToTheList, setContentType } from '../../redux/contextSlice/contextSlice';
 import CreatorsMedias from '../../components/CreatorsMedias/CreatorsMedias';
+import SurveyCard from '../../components/SurveyCard/SurveyCard';
 
 type creatorInfos = {
   account: any;
@@ -144,7 +145,23 @@ console.log(publicationListApi.data)
         </div>
         <ContentType />
         { contentType === "home" &&
-        publicationListApi.data.map((post: any) => (
+        publicationListApi.data.map((post: any) => {
+          if(post.responses) {
+            console.log(post)
+            return (
+              <SurveyCard 
+                question={post.content}
+                responses={post.responses}
+                username={post.author.username}
+                name={post.author.displayName}
+                authorId={post.author.id}
+                publicationId={post.id}
+                date={post.creationDate}
+                hasAlreadyVoted={post.hasAlreadyVoted}
+                />
+            )
+          }
+          return (
             <PostCard
             key={post.id}
             publicationId={post.id}
@@ -161,7 +178,7 @@ console.log(publicationListApi.data)
             authorId={post.author.id}
             onClick={() => handlePostClick(post.author.username, post.id, post.visible)}
         />
-        ))}
+        )})}
         {
           contentType === 'medias' &&
           <CreatorsMedias data={publicationListApi.data} /> 

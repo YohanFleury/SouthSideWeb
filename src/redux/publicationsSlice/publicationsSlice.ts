@@ -1,5 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+type response = {
+    answered: boolean,
+    count: number,
+    id: number,
+    responseText: string
+}
 export type Publication = {
     author: {
         displayName: string;
@@ -14,8 +20,9 @@ export type Publication = {
     visible: boolean;
     creationDate: any;
     nbPictures: number;
-    responses?: any[];
+    responses?: response[];
     pictureUrls: string[];
+    hasAlreadyVoted?: boolean;
 }
 
 interface initialStateProps {
@@ -115,6 +122,38 @@ export const publicationsSlice = createSlice({
                 opfr.nbComments = opfr.nbComments - 1
             }
         },
+        chooseSurveyResponse: (state, {payload}) => {
+            const fp = state.feedPublications.find(publication => publication.id == payload.id)
+            if(fp) {
+                fp.hasAlreadyVoted = true
+                fp.responses?.map((res) => {
+                    if (res.id == payload.resId) {
+                        res.answered = true
+                        res.count = res.count + 1
+                    }
+                }) 
+            }
+            const op = state.oneCreatorPublications.find(publication => publication.id == payload.id)
+            if(op) {
+                op.hasAlreadyVoted = true
+                op.responses?.map((res) => {
+                    if (res.id == payload.resId) {
+                        res.answered = true
+                        res.count = res.count + 1
+                    }
+                }) 
+            }
+            const opfr = state.oneCreatorPublicationsFromResearch.find(publication => publication.id == payload.id)
+            if(opfr) {
+                opfr.hasAlreadyVoted = true
+                opfr.responses?.map((res) => {
+                    if (res.id == payload.resId) {
+                        res.answered = true
+                        res.count = res.count + 1
+                    }
+                }) 
+            }
+        }
     }
 })
 
@@ -127,7 +166,8 @@ export const {
     removeLikeToPublication,
     deletePublication,
     addOneToNbComments,
-    removeOneToNbComments
+    removeOneToNbComments,
+    chooseSurveyResponse
 } = publicationsSlice.actions
 
 export default publicationsSlice.reducer

@@ -7,7 +7,7 @@ import { setContentType } from '../../redux/contextSlice/contextSlice';
 
 const ContentDiv = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   padding: 5px 10px;
   width: 80%;
 `;
@@ -16,11 +16,23 @@ interface StyledMenuProps {
   selected: boolean;
 }
 
-const StyledMenu = styled.div<StyledMenuProps>`
+const StyledMenuLeft = styled.div<StyledMenuProps>`
   cursor: pointer;
   border-bottom: ${props => props.selected ? `2px solid ${colors.dark.primary}` : 'none'};
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 5px
 `;
-
+const StyledMenuRight = styled.div<StyledMenuProps>`
+  cursor: pointer;
+  border-bottom: ${props => props.selected ? `2px solid ${colors.dark.primary}` : 'none'};
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 5px;
+`;
 const ContentType = () => {
   const dispatch = useAppDispatch()
 
@@ -33,18 +45,14 @@ const ContentType = () => {
 
   return (
     <ContentDiv>
-        <StyledMenu onClick={() => handleMenuClick("home")} selected={selectedMenu === "home"}>
+        <StyledMenuLeft 
+          onClick={() => handleMenuClick("home")}
+          selected={selectedMenu === "home"}>
             <CustomText style={{ fontSize: 'clamp(17px, 2.2vw, 19px)'}}>Accueil</CustomText>
-        </StyledMenu>
-        <StyledMenu onClick={() => handleMenuClick("medias")} selected={selectedMenu === "medias"}>
+        </StyledMenuLeft>
+        <StyledMenuRight onClick={() => handleMenuClick("medias")} selected={selectedMenu === "medias"}>
             <CustomText style={{ fontSize: 'clamp(17px, 2.2vw, 19px)'}}>Medias</CustomText>
-        </StyledMenu>
-        <StyledMenu onClick={() => handleMenuClick("videos")} selected={selectedMenu === "videos"}>
-            <CustomText style={{ fontSize: 'clamp(17px, 2.2vw, 19px)'}}>Videos</CustomText>
-        </StyledMenu>
-        <StyledMenu onClick={() => handleMenuClick("lives")} selected={selectedMenu === "lives"}>
-            <CustomText style={{ fontSize: 'clamp(17px, 2.2vw, 19px)'}}>Lives</CustomText>
-        </StyledMenu>
+        </StyledMenuRight>
     </ContentDiv>
   )
 }

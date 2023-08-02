@@ -12,6 +12,7 @@ import { FixedSizeList as List, ListChildComponentProps } from "react-window";
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
 import { setFeedPublicationList } from '../../redux/publicationsSlice/publicationsSlice'
+import SurveyCard from '../../components/SurveyCard/SurveyCard'
 
 const HomePage = () => {
     const email = "tata@example.com"
@@ -54,9 +55,25 @@ console.log("env  : ", process.env.NODE_ENV)
   return (
     <MainContainer>
         <div style={{width: '83%'}}>
-         <CustomHeader title={process.env.NODE_ENV === "development" ? 'Accueil dev': 'Accueil Prod'} />
+         <CustomHeader title='Accueil' />
         </div>
-        {feedList.map(post => (
+        {feedList.map(post => {
+          if(post.responses && post.hasAlreadyVoted) {
+            console.log(post)
+            return (
+              <SurveyCard 
+                question={post.content}
+                responses={post.responses}
+                username={post.author.username}
+                name={post.author.displayName}
+                authorId={post.author.id}
+                publicationId={post.id}
+                date={post.creationDate}
+                hasAlreadyVoted={post.hasAlreadyVoted}
+                />
+            )
+          }
+          return (
             <PostCard
             key={post.id}
             publicationId={post.id}
@@ -74,7 +91,7 @@ console.log("env  : ", process.env.NODE_ENV)
             onPpPress={() => handlePpClick(post.author.username)}
             onClick={() => handlePostClick(post.author.username, post.id)}
           />
-        ))}
+        )})}
     </MainContainer>
   )
 }
