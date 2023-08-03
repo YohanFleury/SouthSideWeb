@@ -21,7 +21,7 @@ const MyFavsPage = () => {
         }
         {
             favsList.length === 0 &&
-            <CustomText>Aucun favoris !</CustomText>
+            <CustomText style={{margin: 30}}>Vous n'avez aucun favori pour le moment !</CustomText>
         }
         </div>
     </MainContainer>

@@ -76,17 +76,17 @@ console.log('Recherche: ', getCreatorByUsernameAndDisplaynameApi.data)
           <CustomText>Chargement ...</CustomText>
         }
       </ResearchResults>}
-      {textSearch.length == 0 &&
+      {textSearch.length === 0 &&
        <div style={{margin: 10, marginTop: 20}}>
         <CustomText>Tendances</CustomText>
       </div>}
-      {textSearch.length == 0 &&
+      {textSearch.length === 0 &&
       <CustomCarousel creators={getCreatorsApi.data} />}
-      {textSearch.length == 0 &&
+      {textSearch.length === 0 &&
       <div style={{margin: 10, marginTop: 60}}>
         <CustomText>Suggestions</CustomText>
       </div>}
-      {textSearch.length == 0 &&
+      {textSearch.length === 0 &&
       <CustomCarousel creators={getCreatorsApi.data} />}
     </MainContainer>
   )

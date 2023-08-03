@@ -1,14 +1,11 @@
 import React, { useEffect } from 'react'
 import publications from '../../api/publications'
-import users from '../../api/users'
 import colors from '../../config/colors'
 import useApi from '../../hooks/useApi/useApi'
-import { CustomDivider, CustomHeader, CustomText } from '../../components/CustomedComponents/index'
+import { CustomHeader, } from '../../components/CustomedComponents/index'
 import PostCard from '../../components/PostCard/PostCard'
 import { useNavigate } from 'react-router-dom';
 
-import AutoSizer from 'react-virtualized-auto-sizer' ;
-import { FixedSizeList as List, ListChildComponentProps } from "react-window";
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
 import { setFeedPublicationList } from '../../redux/publicationsSlice/publicationsSlice'
@@ -98,7 +95,6 @@ console.log("env  : ", process.env.NODE_ENV)
 
 const MainContainer = styled.div`
   background-color: ${colors.dark.background};
-  border-left: 0.5px solid ${colors.lightDark};
   display: flex;
   flex-direction: column;
   flex: 1;

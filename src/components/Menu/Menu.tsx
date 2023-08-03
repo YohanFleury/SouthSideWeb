@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import colors from '../../config/colors'
 import { setcloseModal, setOpenNewPostModal } from '../../redux/contextSlice/contextSlice'
-import { useAppDispatch } from '../../redux/store'
+import { useAppDispatch, useAppSelector } from '../../redux/store'
 import { CustomButton, CustomText } from '../CustomedComponents'
 import { MdOutlineHome,  } from "react-icons/md";
 import { BiBell } from "react-icons/bi";
@@ -22,9 +22,12 @@ const Menu = () => {
   const navigate = useNavigate();
   const {pathname} = useLocation();
 
+  const currentUser = useAppSelector(state => state.context.currentUser)
   const handleNavigate = (route: string) => {
     navigate(`/${route}`)
   }
+
+  console.log('youhouuu',currentUser)
   return (
     <MainContainer onClick={() => dispatch(setcloseModal())}>
       <LogoContainer>
@@ -161,12 +164,15 @@ const Menu = () => {
           </ItemTitle>
           </ResponsiveText>
         </MenuItem>
-      <ButtonContainer>
-        <CustomButton title='Publier' onClick={() => dispatch(setOpenNewPostModal())} />
-      </ButtonContainer>
-      <PostBtn onClick={() => dispatch(setOpenNewPostModal())}>
-        <AiOutlinePlus color='white' size={24} />
-      </PostBtn>
+      {currentUser.creator && 
+      <>
+        <ButtonContainer>
+          <CustomButton title='Publier' onClick={() => dispatch(setOpenNewPostModal())} />
+        </ButtonContainer>
+        <PostBtn onClick={() => dispatch(setOpenNewPostModal())}>
+          <AiOutlinePlus color='white' size={24} />
+        </PostBtn>
+      </>}
       </Container>
     </MainContainer>
   )
@@ -177,6 +183,7 @@ const MainContainer = styled.div`
   min-width: 15%;
   background-color: ${colors.dark.background};
   border-left: 0.2px solid ${colors.lightDark};
+  border-right: 0.2px solid ${colors.lightDark};
   position: sticky;
   top: 0;
   height: 100vh; // sets the maximum height to the view height

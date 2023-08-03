@@ -221,19 +221,18 @@ const ArrowContainer = styled.div`
 
 const MainContainer = styled.div`
   display: flex;
-  flex-direction: row;
   overflow: hidden;
   background-color: ${colors.dark.background};
   padding-left: 20px;
   padding-right: 20px;
   padding-top: 10px;
-  padding-bottom: 10px;
-  max-width: 80%;
+  width: 80%;
+  @media (max-width: 1000px) {
+    width: 90%;
+  }
   `;
   
   const Container = styled.div`
-  overflow: hidden;
-  flex: 1;
   position: relative;
   width: 100%;
   border-bottom: 1px solid ${colors.lightDark};
@@ -255,7 +254,7 @@ const ImageContainer = styled.div`
 const Image = styled.img`
   width: 100%;   
   height: 100%;  
-  object-fit: contain;  // Add this line
+  object-fit: contain; 
   
 `;
 
@@ -270,7 +269,6 @@ const IconContainer = styled.div`
 display: flex;
 align-items: center;
 padding: 5px;
-margin-top: 5px 
 `;
 
 const InnerContainer = styled.div`

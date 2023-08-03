@@ -150,7 +150,10 @@ const SurveyCard: React.FC<SurveyCardProps> = ({
   padding-right: 20px;
   padding-top: 10px;
   padding-bottom: 10px;
-  max-width: 80%;
+  width: 80%;
+  @media (max-width: 1000px) {
+    width: 90%;
+  }
 `;
 
 const Container = styled.div`

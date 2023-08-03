@@ -123,31 +123,31 @@ export const publicationsSlice = createSlice({
             }
         },
         chooseSurveyResponse: (state, {payload}) => {
-            const fp = state.feedPublications.find(publication => publication.id == payload.id)
+            const fp = state.feedPublications.find(publication => publication.id === payload.id)
             if(fp) {
                 fp.hasAlreadyVoted = true
                 fp.responses?.map((res) => {
-                    if (res.id == payload.resId) {
+                    if (res.id === payload.resId) {
                         res.answered = true
                         res.count = res.count + 1
                     }
                 }) 
             }
-            const op = state.oneCreatorPublications.find(publication => publication.id == payload.id)
+            const op = state.oneCreatorPublications.find(publication => publication.id === payload.id)
             if(op) {
                 op.hasAlreadyVoted = true
                 op.responses?.map((res) => {
-                    if (res.id == payload.resId) {
+                    if (res.id === payload.resId) {
                         res.answered = true
                         res.count = res.count + 1
                     }
                 }) 
             }
-            const opfr = state.oneCreatorPublicationsFromResearch.find(publication => publication.id == payload.id)
+            const opfr = state.oneCreatorPublicationsFromResearch.find(publication => publication.id === payload.id)
             if(opfr) {
                 opfr.hasAlreadyVoted = true
                 opfr.responses?.map((res) => {
-                    if (res.id == payload.resId) {
+                    if (res.id === payload.resId) {
                         res.answered = true
                         res.count = res.count + 1
                     }
