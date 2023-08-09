@@ -2,6 +2,7 @@ import React from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import styled from 'styled-components';
+import { CreatorObject } from '../../pages/ResearchPage/ResearchPage';
 import CreatorCard from '../CreatorCard/CreatorCard';
 import './MyCarouselStyles.css';
 
@@ -35,12 +36,13 @@ const CustomCarousel = ({ creators }: Creators) => {
       partialVisible
       
     >
-      {creators.map((creator: any) => (
+      {creators.map((creator: CreatorObject) => (
         <CreatorCard 
         key={creator.id}
         username={creator.username}
         name={creator.displayName}
-        creatorId={creator.id} />
+        creatorPicture={creator.creator.image}
+         />
       ))}
     </Carousel>
   );

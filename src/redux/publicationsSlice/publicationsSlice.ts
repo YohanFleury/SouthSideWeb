@@ -11,6 +11,8 @@ export type Publication = {
         displayName: string;
         id: number;
         username: string;
+        pictureUrl: string;
+        bgImageUrl: string;
     };
     content: string;
     id: number;

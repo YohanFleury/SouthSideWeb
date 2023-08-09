@@ -13,10 +13,10 @@ type MyCreatorCardProps = {
     name: string;
     username: string;
     isVerified?: boolean;
-    creatorId: number;
+    creatorPicture: string;
 }
 
-const CreatorCard: React.FC<MyCreatorCardProps> = ({ name, isVerified = true, username, creatorId }) => {
+const CreatorCard: React.FC<MyCreatorCardProps> = ({ name, isVerified = true, username, creatorPicture }) => {
 
   const [isDragging, setIsDragging] = useState(false);
 
@@ -35,31 +35,19 @@ const CreatorCard: React.FC<MyCreatorCardProps> = ({ name, isVerified = true, us
   };
     const navigate = useNavigate();
 
-    const creatorPictureApi = useApi(users.getCreatorPicture)
-    const [creatorPicture, setCreatorPicture] = useState<any>()
-
     const handleClick = () => {
       navigate(`/${username}`);
     };
 
-    useEffect(() => {
-        creatorPictureApi.request(creatorId)
-    }, [])
-  
-    useEffect(() => {
-        if(creatorPictureApi.success) {
-            setCreatorPicture(arrayBufferToBase64(creatorPictureApi.data))
-        } else if(creatorPictureApi.error) {
-            console.log('Error [get creator picture]')
-        }
-    }, [creatorPictureApi.success, creatorPictureApi.error, creatorPictureApi.data])
       
     
   return (
     <ImageBackground 
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp} img={creatorPicture} >
+      onMouseUp={handleMouseUp} 
+      
+      img={creatorPicture} >
         <GradientDiv>
             <NamingContainer>
                 <CustomText style={{fontSize: '1em'}}>{name}</CustomText>
@@ -85,7 +73,7 @@ interface ImageBackgroundProps {
   }
 
   const ImageBackground = styled.div<ImageBackgroundProps>`
-  background-image: url(${({img}: any) => `data:image/jpg;base64,${img}`});
+  background-image: url(${({img}: any) => img});
   height: 30vh;
   min-width: 200px;
   max-width: 300px;

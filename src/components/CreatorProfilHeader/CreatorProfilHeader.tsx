@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { addCreatorToFavList, deleteCreatorFromFavList } from '../../redux/contextSlice/contextSlice';
 
 interface CreatorProfilHeaderProps {
-    creatorImage: string;
+    creatorImage?: string;
     displayName?: string;
     description?: string;
     creatorId?: number;
@@ -107,16 +107,16 @@ const CreatorProfilHeader = ({ creatorImage, displayName, description, creatorId
 }
 
 interface ImageBackgroundProps {
-    img: string;
+    img: string | undefined ;
   }
 
 const ImageBackground = styled.div<ImageBackgroundProps>`
-  background-image: url(${({img}: any) => `data:image/jpg;base64,${img}`});
+  background-image: url(${({img}: any) => img});
   width: 100%;
   height: 50vh;
 
   @media (min-width: 768px) {
-    height: 60vh
+    height: 80vh
   }
   //padding-bottom: 33.33%; /* For a 3:1 aspect ratio */
   overflow: hidden;

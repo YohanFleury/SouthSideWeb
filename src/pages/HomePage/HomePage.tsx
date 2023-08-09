@@ -10,6 +10,7 @@ import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
 import { setFeedPublicationList } from '../../redux/publicationsSlice/publicationsSlice'
 import SurveyCard from '../../components/SurveyCard/SurveyCard'
+import { ClipLoader } from 'react-spinners'
 
 const HomePage = () => {
     const email = "tata@example.com"
@@ -48,12 +49,16 @@ const HomePage = () => {
   const handlePostClick = (username: string, publicationId: number) => {
     navigate(`/${username}/post/${publicationId}`)
   }
-console.log("env  : ", process.env.NODE_ENV)
+
   return (
     <MainContainer>
         <div style={{width: '83%'}}>
          <CustomHeader title='Accueil' />
         </div>
+        {feedApi.loading &&
+        <div style={{display: 'flex', justifyContent: 'center', padding: 10}}>
+          <ClipLoader color={colors.dark.primary} loading={true} size={30}  />
+        </div>}
         {feedList.map(post => {
           if(post.responses && post.hasAlreadyVoted) {
             console.log(post)
@@ -67,12 +72,14 @@ console.log("env  : ", process.env.NODE_ENV)
                 publicationId={post.id}
                 date={post.creationDate}
                 hasAlreadyVoted={post.hasAlreadyVoted}
+                profilPicture={post.author.pictureUrl}
                 />
             )
           }
           return (
             <PostCard
             key={post.id}
+            profilPicture={post.author.pictureUrl}
             publicationId={post.id}
             images={post.pictureUrls}
             username={post.author.username}

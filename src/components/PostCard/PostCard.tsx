@@ -5,6 +5,7 @@ import useApi from '../../hooks/useApi/useApi';
 import { CustomText, CustomDivider } from '../CustomedComponents/index';
 import PostCardHeader from '../PostCardHeader/PostCardHeader';
 
+
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import '../CustomCarousel/MyCarouselStyles.css'
@@ -19,6 +20,7 @@ import { FaRegComment } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
 
 import colors from '../../config/colors';
+import ProfilPicture from '../ProfilPicture/ProfilPicture';
 
 export interface PostCardProps {
     description?: string;
@@ -35,7 +37,8 @@ export interface PostCardProps {
     publicationId: number;
     date: string | undefined;
     authorId: number;
-    onClick: () => void
+    onClick: () => void;
+    profilPicture: string;
 }
 
 const DOUBLE_PRESS_DELAY = 300;
@@ -78,7 +81,8 @@ const PostCard = ({
     publicationId,
     date,
     authorId,
-    onClick
+    onClick,
+    profilPicture
    }: PostCardProps) => {
     
 // State
@@ -158,6 +162,7 @@ const handleDislike = () => {
                 nbPictures={nbPictures}
                 description={description}
                 isSurvey={false}
+                profilPicture={profilPicture}
                 />
                 {images.length > 0 &&
                     <Carousel 
@@ -168,6 +173,10 @@ const handleDislike = () => {
                       {images.map((image, index) => (
                           <ImageContainer  onDoubleClick={handleDoublePress}>
                               <Image key={index} src={image} />
+                              {!visible && !isCreatorInSubList &&
+                              <LockView>
+                                <FaLock size={22} color={colors.dark.primary} />
+                              </LockView>}
                           </ImageContainer>
                       ))}
                     </Carousel>
@@ -249,6 +258,7 @@ const ImageContainer = styled.div`
   max-height: 650px;
   max-width: 100%;
   border-radius: 10px;
+  position: relative;
 `;
 
 const Image = styled.img`
@@ -264,6 +274,19 @@ const Description = styled.div`
   padding: 5px;
 `;
 
+const LockView = styled.div`
+display: flex;
+width: 50px;
+height: 50px;
+border-radius: 50%;
+border: 1px solid ${colors.dark.primary};
+background-color: ${colors.dark.background};
+align-items: center;
+justify-content: center;
+position: absolute;
+top: 45%;
+left: 45%;
+`;
 
 const IconContainer = styled.div`
 display: flex;

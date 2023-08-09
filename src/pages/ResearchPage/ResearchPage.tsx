@@ -11,6 +11,22 @@ import { currentUser } from '../../redux/contextSlice/contextSlice';
 
 import { MdClose } from 'react-icons/md';
 
+export type CreatorObject = {
+  account: {
+    birthdate: string,
+    picture: string
+  },
+  creator: {
+    certified: boolean,
+    description: string,
+    image: string,
+    validated: boolean
+  },
+  displayName: string,
+  email: string,
+  id: number,
+  username: string,
+}
 
 const ResearchPage = () => {
 
@@ -63,9 +79,10 @@ console.log('Recherche: ', getCreatorByUsernameAndDisplaynameApi.data)
       {textSearch.length > 0 &&
       <ResearchResults>
         {!getCreatorByUsernameAndDisplaynameApi.loading &&
-          getCreatorByUsernameAndDisplaynameApi.data.map((creator: currentUser) => (
+          getCreatorByUsernameAndDisplaynameApi.data.map((creator: CreatorObject) => (
             <ResearchResult 
               key={creator.id} 
+              profilPicture={creator.account.picture}
               username={creator.username} 
               creatorId={creator.id} 
               displayName={creator.displayName} />

@@ -13,25 +13,12 @@ type ResearchResultProps = {
     username: string;
     displayName: string;
     creatorId: number;
+    profilPicture: string;
 }
 
-const ResearchResult = ({ username, displayName, creatorId }: ResearchResultProps) => {
+const ResearchResult = ({ username, displayName, creatorId, profilPicture }: ResearchResultProps) => {
     const navigate = useNavigate();
-    const [profilPicture, setProfilPicture] = useState<any>()
-
-    const getProfilPictureApi = useApi(users.getProfilPicture)
-
-    useEffect(() => {
-        getProfilPictureApi.request(creatorId)
-     }, [])
-   
-     useEffect(() => {
-        if(getProfilPictureApi.success) {
-           setProfilPicture(arrayBufferToBase64(getProfilPictureApi.data))
-        } else if(getProfilPictureApi.error) {
-           console.log('Error [Get creator picture [PostCardHeader]]')
-        }
-     }, [getProfilPictureApi.success, getProfilPictureApi.error, getProfilPictureApi.data])
+    
      
      const handleClick = () => {
         navigate(`/${username}`);
@@ -41,7 +28,7 @@ const ResearchResult = ({ username, displayName, creatorId }: ResearchResultProp
     <MainContainer onClick={handleClick}>
         <ItemContainer>
             <InfosCreator>
-                <ProfilPicture source={`data:image/jpg;base64,${profilPicture}`} size={45} />
+                <ProfilPicture source={profilPicture} size={45} />
                 <NamingContainer>
                     <CustomText style={{fontSize: 18, marginBottom: 2}}>
                         {displayName}

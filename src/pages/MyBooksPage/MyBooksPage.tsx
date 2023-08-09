@@ -24,6 +24,7 @@ const MyBooksPage = () => {
         {savedPublicationsList.map(post => (
             <PostCard
             key={post.id}
+            profilPicture={post.author.pictureUrl}
             publicationId={post.id}
             images={post.pictureUrls}
             username={post.author.username}

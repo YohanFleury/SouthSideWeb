@@ -117,14 +117,17 @@ const addComment = () => {
           images={publication.pictureUrls}
           date={publication.creationDate}
           authorId={publication.author.id}
+          profilPicture={publication.author.pictureUrl}
         />}
         {isCreatorInSubList &&
-        <div style={{display: 'flex', alignItems: 'center', }}>
-          <CustomInput
-            placeholder='Ajouter un commentaire' 
-            onChange={(e => setCommentValue(e.target.value))} 
-            value={commentValue}
-          />
+        <div style={{display: 'flex', alignItems: 'center', padding: 20}}>
+          <div style={{width: '85%'}}>
+            <CustomInput
+              placeholder='Ajouter un commentaire' 
+              onChange={(e => setCommentValue(e.target.value))} 
+              value={commentValue}
+            />
+          </div>
           <StyledButton 
             onClick={commentValue.length > 0 ? addComment : () => null}
             style={{backgroundColor: commentValue.length > 0 ? '#1E6CD0' : '#042145'}}>

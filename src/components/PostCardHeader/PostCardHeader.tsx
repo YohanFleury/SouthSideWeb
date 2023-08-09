@@ -27,6 +27,7 @@ interface PostCardHeaderProps {
     nbPictures?: number;
     isSurvey: boolean;
     onClick?: () => void;
+    profilPicture: string;
 }
 
 const PostCardHeader = ({ 
@@ -41,11 +42,10 @@ const PostCardHeader = ({
     description,
     nbPictures,
     isSurvey,
-    onClick
+    onClick,
+    profilPicture
 }: PostCardHeaderProps) => {
 
-
-    const [profilPicture, setProfilPicture] = useState<any>()
     const [saveTitle, setSaveTitle] = useState<string>('Enregistrer')
 
     const savedPublicationsList = useAppSelector(state => state.context.savedPublicationsList)
@@ -58,12 +58,6 @@ const PostCardHeader = ({
     const savePublicationApi = useApi(publications.savePublication)
     const deleteSavePublicationApi = useApi(publications.deleteSavedPublication)
     const deletePublicationApi = useApi(publications.deletePublication)
-    const getProfilPictureApi = useApi(users.getProfilPicture)
-
-    // Profil Picture 
-    useEffect(() => {
-        getProfilPictureApi.request(authorId)
-    }, [])
 
     useEffect(() => {
         const find = savedPublicationsList.find(publication => publication.id == publicationId)
@@ -73,14 +67,6 @@ const PostCardHeader = ({
             setSaveTitle('Enregistrer')
         }
     }, [savedPublicationsList])
-
-    useEffect(() => {
-        if(getProfilPictureApi.success) {
-           setProfilPicture(arrayBufferToBase64(getProfilPictureApi.data))
-        } else if(getProfilPictureApi.error) {
-           console.log('Error [Get creator picture [PostCardHeader]]')
-        }
-    }, [getProfilPictureApi.success, getProfilPictureApi.error, getProfilPictureApi.data])
     
     // Save Publication
     useEffect(() => {
@@ -157,7 +143,7 @@ const PostCardHeader = ({
                     <div style={{display: 'flex', flexDirection: 'row', flex: 10}}>
                         <ProfilPicture 
                             size={40}
-                            source={`data:image/jpg;base64,${profilPicture}`}
+                            source={profilPicture}
                             onPress={(event: any) => {
                                 event.stopPropagation();
                                 if (onPpPress) {

@@ -13,7 +13,7 @@ const MySubsPage = () => {
           {
               subsList.map(el => (
                 <div style={{alignSelf: 'center', margin: 10}}>
-                    <CreatorCard username={el.username} name={el.displayName} creatorId={el.id} />
+                    <CreatorCard username={el.username} name={el.displayName} creatorPicture={'undefined'} />
                 </div>
               ))
           }

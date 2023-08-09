@@ -23,6 +23,7 @@ interface SurveyCardProps {
     publicationId: number;
     date: string | undefined;
     hasAlreadyVoted: boolean;
+    profilPicture: string;
 }
 
 type response = {
@@ -41,7 +42,8 @@ const SurveyCard: React.FC<SurveyCardProps> = ({
     date,
     publicationId,
     onPpPress,
-    hasAlreadyVoted
+    hasAlreadyVoted,
+    profilPicture
   }) => {
     const [choosenResId, setChoosenResId] = useState<number | null>(null)    
     const [totalCount, setTotalCount] = useState(0)
@@ -99,6 +101,7 @@ const SurveyCard: React.FC<SurveyCardProps> = ({
               publicationId={publicationId}
               description={description}
               isSurvey={true}
+              profilPicture={profilPicture}
             />
             <Subject>
               <CustomText style={{ fontSize: 16 }}>{question}</CustomText>

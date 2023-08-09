@@ -20,7 +20,7 @@ const RedDiv = styled.div`
   `;
 
   function InnerApp() {
-    const email = "tata@example.com"
+    const email = "alicelee@example.com"
     // Redux
     const dispatch = useAppDispatch()
     // API 

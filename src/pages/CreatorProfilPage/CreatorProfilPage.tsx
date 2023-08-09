@@ -16,19 +16,10 @@ import { useNavigate } from 'react-router-dom';
 import { addSubsToTheList, setContentType } from '../../redux/contextSlice/contextSlice';
 import CreatorsMedias from '../../components/CreatorsMedias/CreatorsMedias';
 import SurveyCard from '../../components/SurveyCard/SurveyCard';
+import { CreatorObject } from '../ResearchPage/ResearchPage';
+import { Publication } from '../../redux/publicationsSlice/publicationsSlice';
+import { ClipLoader } from 'react-spinners';
 
-type creatorInfos = {
-  account: any;
-  creator: {
-    certified: boolean;
-    description: string;
-    validated: boolean;
-  },
-  displayName: string;
-  email: string;
-  id: number;
-  username: string;
-}
 
 const CreatorProfilPage = () => {
 // Navigation
@@ -43,15 +34,13 @@ const CreatorProfilPage = () => {
   const contentType = useAppSelector(state => state.context.contentType)
   const dispatch = useAppDispatch()
 // State
-  const [creatorInfos, setCreatorInfos] = useState<creatorInfos>()
-  const [creatorImage, setCreatorImage] = useState<any>()
+  const [creatorInfos, setCreatorInfos] = useState<CreatorObject>()
   const [isCreatorInFavList, setIsCreatorInFavList] = useState<boolean>(false) 
   const [isCreatorInSubList, setIsCreatorInSubList] = useState<boolean>(false)
 
 // Api
   const getUserByUsernameApi = useApi(users.getUserByUsername)
   const publicationListApi = useApi(publications.getOneUsersPublications)
-  const creatorPictureApi = useApi(users.getCreatorPicture)
   const createSubscritpionApi = useApi(users.createSubscritpion)
 
 // Effects
@@ -79,19 +68,7 @@ const CreatorProfilPage = () => {
     }
   }, [getUserByUsernameApi.success, getUserByUsernameApi.error])
   
-  useEffect(() => {
-    if (creatorInfos) {
-      creatorPictureApi.request(creatorInfos.id)
-    }
-  }, [creatorInfos])
-
-  useEffect(() => {
-    if(creatorPictureApi.success) {
-      setCreatorImage(arrayBufferToBase64(creatorPictureApi.data))
-    } else if(creatorPictureApi.error) {
-      console.log('Error [Get creator picture]')
-    }
-  }, [creatorPictureApi.success, creatorPictureApi.error, creatorPictureApi.data])
+  
   
   useEffect(() => {
     if (creatorInfos) {
@@ -136,17 +113,22 @@ console.log(publicationListApi.data)
           username={creatorInfos?.username}
           description={creatorInfos?.creator.description}
           displayName={creatorInfos?.displayName} 
-          creatorImage={creatorImage} />
+          creatorImage={creatorInfos?.creator.image} />
+        {!isCreatorInSubList &&
         <div style={{display: 'flex', marginTop: 10, marginBottom: 20, width: '80%', justifyContent: 'center'}}>
           <CustomButton
             icon={<FaLock size={13} color='white' style={{ marginRight: 15 }} />}
             title="S'abonner à ce créateur" 
             onClick={() => createSubscritpionApi.request(creatorInfos?.id)} />
-        </div>
+        </div>}
         <ContentType />
+        {publicationListApi.loading &&
+        <div style={{display: 'flex', justifyContent: 'center', padding: 10}}>
+          <ClipLoader color={colors.dark.primary} loading={true} size={30}  />
+        </div>}
         { contentType === "home" &&
-        publicationListApi.data.map((post: any) => {
-          if(post.responses) {
+        publicationListApi.data.map((post: Publication) => {
+          if(post.responses && post.hasAlreadyVoted) {
             console.log(post)
             return (
               <SurveyCard 
@@ -158,6 +140,7 @@ console.log(publicationListApi.data)
                 publicationId={post.id}
                 date={post.creationDate}
                 hasAlreadyVoted={post.hasAlreadyVoted}
+                profilPicture={post.author.pictureUrl}
                 />
             )
           }
@@ -176,12 +159,13 @@ console.log(publicationListApi.data)
             nbPictures={post.nbPictures}
             date={post.creationDate}
             authorId={post.author.id}
+            profilPicture={post.author.pictureUrl}
             onClick={() => handlePostClick(post.author.username, post.id, post.visible)}
         />
         )})}
         {
           contentType === 'medias' &&
-          <CreatorsMedias data={publicationListApi.data} /> 
+          <CreatorsMedias data={publicationListApi.data} isSub={isCreatorInSubList} /> 
         }
     </MainContainer>
   )
