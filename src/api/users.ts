@@ -1,6 +1,6 @@
 import apiClient from "./client";
 
-const endpoint = '/users'
+const endpoint = '/v1/users'
 
 const getAllUsers = () => apiClient.get(endpoint)
 

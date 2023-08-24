@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
-import { setFeedPublicationList } from '../../redux/publicationsSlice/publicationsSlice'
+import { Publication, setFeedPublicationList } from '../../redux/publicationsSlice/publicationsSlice'
 import SurveyCard from '../../components/SurveyCard/SurveyCard'
 import { ClipLoader } from 'react-spinners'
 
@@ -59,7 +59,7 @@ const HomePage = () => {
         <div style={{display: 'flex', justifyContent: 'center', padding: 10}}>
           <ClipLoader color={colors.dark.primary} loading={true} size={30}  />
         </div>}
-        {feedList.map(post => {
+        {feedApi.data.map((post: Publication) => {
           if(post.responses && post.hasAlreadyVoted) {
             console.log(post)
             return (

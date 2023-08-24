@@ -2,11 +2,11 @@ import { create } from 'apisauce'
 
 
 const apiClient = create({
-   baseURL: 'http://LB-PronosAPI-193411774.eu-west-3.elb.amazonaws.com/shareskillsapi/v1',
+   baseURL: 'https://api.skillsadvices.com/shareskillsapi',
    timeout: 30000,
    headers: {
-      Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsaWNlbGVlQGV4YW1wbGUuY29tIn0.QJ0bFj2US1q2pWALSQUpXr7dvvKJkXIOWFeNMsmOU2s`,
-      email: 'alicelee@example.com',
+      Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRhdGFAZXhhbXBsZS5jb20ifQ.ZxHZBjy_2yRTE9tDVizgoiBTehz7D9DxYIDNYNl8NUw`,
+      email: 'tata@example.com',
    }
 })
 

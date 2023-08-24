@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import colors from '../../config/colors'
-import { setcloseModal, setOpenNewPostModal } from '../../redux/contextSlice/contextSlice'
+import { setcloseModal, setOpenNewPostModal, setOpenPushMediasModal } from '../../redux/contextSlice/contextSlice'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
 import { CustomButton, CustomText } from '../CustomedComponents'
 import { MdOutlineHome,  } from "react-icons/md";
@@ -15,6 +15,7 @@ import { FaSistrix } from "react-icons/fa";
 import { IoWalletOutline } from "react-icons/io5";
 import { FiSettings } from "react-icons/fi";
 import { AiOutlinePlus } from "react-icons/ai";
+import { MdMailLock } from "react-icons/md";
 import logo from '../../assets/logoMvp.png'
 
 const Menu = () => {
@@ -173,6 +174,15 @@ const Menu = () => {
           <AiOutlinePlus color='white' size={24} />
         </PostBtn>
       </>}
+      {currentUser.creator && 
+      <>
+        <ButtonContainer>
+          <CustomButton title='Push Message' onClick={() => dispatch(setOpenPushMediasModal())} />
+        </ButtonContainer>
+        <PostBtn onClick={() => dispatch(setOpenPushMediasModal())}>
+          <MdMailLock color='white' size={22} />
+        </PostBtn>
+      </>}
       </Container>
     </MainContainer>
   )
@@ -193,7 +203,7 @@ const MainContainer = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  padding: 10px;
   @media (max-width: 1000px) {
     display: none;
   }

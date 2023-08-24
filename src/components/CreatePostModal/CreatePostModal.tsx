@@ -48,7 +48,6 @@ Modal.setAppElement('#root');
 const CreatePostModal = () => {
   // State
   const [content, setContent] = useState('');
-  const [profilPicture, setProfilPicture] = useState<any>(null)
   const [isSurvey, setIsSurvey] = useState<boolean>(false)
   const [isDisabled, setIsDisabled] = useState<boolean>(true)
   const [imagesChoosen, setImagesChoosen] = useState<any[]>([])
@@ -65,7 +64,6 @@ const CreatePostModal = () => {
   const responsesArray = useAppSelector(state => state.context.responsesArray)
 
   // API
-  const getProfilPictureApi = useApi(users.getProfilPicture)
   const createSurveyApi = useApi(publications.createSurvey)
   const createPublicationApi = useApi(publications.createPublication)
   const addImageToPublicationApi = useApi(publications.addImageToPublication)
@@ -88,18 +86,6 @@ const CreatePostModal = () => {
     }
   }, [content, responsesArray, imagesChoosen, isSurvey]) 
 
-  useEffect(() => {
-    getProfilPictureApi.request(currentUser.id)
-    console.log(currentUser)
-    }, [])
-  useEffect(() => {
-    if(getProfilPictureApi.success) {
-       console.log('Photo créateur bien récupérée', getProfilPictureApi.data)
-       setProfilPicture(arrayBufferToBase64(getProfilPictureApi.data))
-    } else if(getProfilPictureApi.error) {
-       console.log('Error [Get creator picture / Drawer]')
-    }
-}, [getProfilPictureApi.success, getProfilPictureApi.error, getProfilPictureApi.data])
 
   useEffect(() => {
     if (createPublicationApi.success) {
@@ -139,13 +125,12 @@ const CreatePostModal = () => {
         file: file,
         type: file.type.split("/").pop()
       }])
-
       reader.onloadend = function(e) {
         if (e.target?.readyState === FileReader.DONE) {
           setImagesChoosen(prevImages => [...prevImages, String(reader.result)]);
         }
       };
-    
+      
       if (file) {
         reader.readAsDataURL(file); 
       }
@@ -178,7 +163,7 @@ const CreatePostModal = () => {
 const handleDeleteImage = (index: number) => {
   setImagesChoosen(imagesChoosen.filter((_, i) => i !== index));
 }
-
+console.log(imagesChoosen)
   return (
     <div>
       <Modal
@@ -194,7 +179,7 @@ const handleDeleteImage = (index: number) => {
             <ProfilPicture 
                 size={35} 
                 onPress={() => null} 
-                source={`data:image/jpg;base64,${profilPicture}`} />
+                source={currentUser.account.picture} />
         </PpContainer>
         <BtnContainer>
             <CustomButton 

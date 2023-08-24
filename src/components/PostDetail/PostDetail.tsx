@@ -17,6 +17,7 @@ type Comment = {
     displayName: string;
     id: number;
     username: string;
+    pictureUrl: string;
   };
   content: string;
   creationDate: any;
@@ -134,7 +135,7 @@ const addComment = () => {
             <CustomText style={{fontSize: 14, fontWeight: 'bold'}}>Commenter</CustomText>
           </StyledButton>
         </div>}
-        { publication?.visible &&
+        { publication?.visible || isCreatorInSubList &&
           comments.map(comment => <CommentItem
             key={comment.id}
             displayName={comment.author.displayName}
@@ -142,6 +143,7 @@ const addComment = () => {
             authorId={comment.author.id}
             content={comment.content}
             date={comment.creationDate}
+            profilPicture={comment.author.pictureUrl}
           />)
         }
     </MainContainer>

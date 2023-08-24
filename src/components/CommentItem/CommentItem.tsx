@@ -16,12 +16,11 @@ interface CommentItemProps {
   date: string;
   onDelete?: () => void;
   authorId: number;
+  profilPicture: string;
 }
 
-const CommentItem = ({ displayName, content, date, onDelete, username, authorId }: CommentItemProps) => {
+const CommentItem = ({ displayName, content, date, onDelete, username, authorId, profilPicture }: CommentItemProps) => {
   
-  // State
-  const [profilPicture, setProfilPicture] = useState<any>(undefined)
 
   // Redux
   const currentUser = useAppSelector(state => state.context.currentUser)
@@ -34,19 +33,10 @@ const CommentItem = ({ displayName, content, date, onDelete, username, authorId 
     getProfilPictureApi.request(authorId)
    }, [])
 
-   useEffect(() => {
-    if(getProfilPictureApi.success) {
-       console.log('Photo profil bien récupérée dans les commentaires!', getProfilPictureApi.data)
-       setProfilPicture(arrayBufferToBase64(getProfilPictureApi.data))
-    } else if(getProfilPictureApi.error) {
-       console.log('Error [Get creator picture / Drawer]')
-    }
-    }, [getProfilPictureApi.success, getProfilPictureApi.error, getProfilPictureApi.data])
-
   return (
     <Container>
       <LeftContainer>
-        <ProfilPicture size={40} source={`data:image/jpg;base64,${profilPicture}`} />
+        <ProfilPicture size={40} source={profilPicture} />
       </LeftContainer>
       <RightContainer>
         <Header>
@@ -64,6 +54,7 @@ const Container = styled.div`
     display: flex;
     flex-direction: row;
     padding: 10px;
+
 `;
 
 const Header = styled.div`
@@ -77,13 +68,13 @@ const LeftContainer = styled.div`
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: 15%;  /* Ajuster cette valeur en fonction de vos besoins */
-    margin-bottom: 10px
+    margin-bottom: 10px;
+    margin-right: 5px;
 `;
 
 const RightContainer = styled.div`
     padding: 5px;
-    width: 85%;  /* Ajuster cette valeur en fonction de vos besoins */
+    width: 100%;  /* Ajuster cette valeur en fonction de vos besoins */
 `;
 
 export default CommentItem

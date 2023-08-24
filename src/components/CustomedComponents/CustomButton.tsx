@@ -15,7 +15,7 @@ interface Props {
 
 const CustomButton: React.FC<Props> = ({ title, onClick, icon, disabled = false, loading = false, buttonStyle, textStyle }) => {
   return (
-    <StyledButton onClick={onClick} style={{...buttonStyle, backgroundColor: disabled ? '#042145' : '#1E6CD0'}} >
+    <StyledButton onClick={onClick} style={{...buttonStyle, backgroundColor: disabled ? '#042145' : '#1D62B9'}} >
         {icon}
         <CustomText style={{...textStyle, fontSize: textStyle?.fontSize || 'clamp(16px, 2vw, 20px)'}}>{title}</CustomText>
     </StyledButton>
@@ -24,7 +24,7 @@ const CustomButton: React.FC<Props> = ({ title, onClick, icon, disabled = false,
 
 const StyledButton = styled.div`
   padding: 10px;
-  width: 60%;
+  width: 100%;
   border-radius: 20px;
   display: flex;
   flex-direction: row;

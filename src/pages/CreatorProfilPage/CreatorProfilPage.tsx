@@ -101,10 +101,10 @@ const CreatorProfilPage = () => {
 
 // Functions
   const handlePostClick = (username: string, publicationId: number, isVisible: boolean) => {
-    if (!isVisible) return ;
+    if (!isVisible && !isCreatorInSubList) return ;
     navigate(`/${username}/post/${publicationId}`)
   }
-console.log(publicationListApi.data)
+
   return (
     <MainContainer>
         <CreatorProfilHeader
@@ -115,7 +115,7 @@ console.log(publicationListApi.data)
           displayName={creatorInfos?.displayName} 
           creatorImage={creatorInfos?.creator.image} />
         {!isCreatorInSubList &&
-        <div style={{display: 'flex', marginTop: 10, marginBottom: 20, width: '80%', justifyContent: 'center'}}>
+        <div style={{display: 'flex', marginTop: 10, marginBottom: 20, width: '65%', justifyContent: 'center', padding: 10}}>
           <CustomButton
             icon={<FaLock size={13} color='white' style={{ marginRight: 15 }} />}
             title="S'abonner à ce créateur" 

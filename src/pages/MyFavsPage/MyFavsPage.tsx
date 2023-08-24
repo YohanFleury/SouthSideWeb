@@ -7,6 +7,7 @@ import { useAppSelector } from '../../redux/store';
 
 const MyFavsPage = () => {
     const favsList = useAppSelector(state => state.context.favoritesList)
+    console.log(favsList)
   return (
     <MainContainer>
         <CustomHeader title='Favoris' />
@@ -15,7 +16,7 @@ const MyFavsPage = () => {
         {
             favsList.map(el => (
                 <div style={{alignSelf: 'center', margin: 10}}>
-                    <CreatorCard username={el.username} name={el.displayName} creatorPicture={'undefined'} />
+                    <CreatorCard username={el.username} name={el.displayName} creatorPicture={el.creator.image} />
                 </div>
             ))
         }

@@ -10,7 +10,7 @@ const MyBooksPage = () => {
     const savedPublicationsList = useAppSelector(state => state.context.savedPublicationsList)
     const navigate = useNavigate();
 
-
+console.log('saveeed', savedPublicationsList)
     const handlePpClick = (username: string) => {
         navigate(`/${username}`);
       };

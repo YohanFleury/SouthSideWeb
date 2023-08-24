@@ -164,7 +164,7 @@ const handleDislike = () => {
                 isSurvey={false}
                 profilPicture={profilPicture}
                 />
-                {images.length > 0 &&
+                {nbPictures > 0 &&
                     <Carousel 
                       renderArrowPrev={CustomArrowPrev}
                       renderArrowNext={CustomArrowNext}

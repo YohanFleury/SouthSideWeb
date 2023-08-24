@@ -7,18 +7,37 @@ type subs = {
     displayName: string,
     description: string,
 }
-type subList = subs[]
+type subList = Creator[]
 
-export type currentUser = {
-    creator: {
-        certified: boolean,
-        description: string,
-        validated: boolean,
+export type Creator = {
+    account: {
+        birthdate: string;
+        picture: string;
     },
+    creator: {
+        certified: boolean;
+        description: string;
+        image: string;
+    }
     displayName: string,
     email: string,
     id: number,
-    username: string,
+    username: string
+}
+export type currentUser = {
+    account: {
+        birthdate: string;
+        picture: string;
+    },
+    creator?: {
+        certified: boolean;
+        description: string;
+        image: string;
+    }
+    displayName: string,
+    email: string,
+    id: number,
+    username: string
 }
 
 interface initialStateProps {
@@ -37,6 +56,7 @@ interface initialStateProps {
     responsesArray: any[];
     openPublicationId: number | null;
     openNewPostModal: boolean;
+    openPushMediasModal: boolean;
 }
 
 export const initialState: initialStateProps = {
@@ -45,10 +65,9 @@ export const initialState: initialStateProps = {
     language: 'en',
     isDrawerOpenable: true,
     currentUser: {
-        creator: {
-            certified: false,
-            description: '',
-            validated: false,
+        account: {
+            birthdate: '',
+            picture: 'https://unsplash.com/photos/jVb0mSn0LbE'
         },
         displayName: '',
         email: '',
@@ -64,7 +83,8 @@ export const initialState: initialStateProps = {
     contentType: 'home',
     responsesArray: ["", "", "", ""],
     openPublicationId: null,
-    openNewPostModal: false
+    openNewPostModal: false,
+    openPushMediasModal: false
 }
 
 export const contextSlice = createSlice({
@@ -95,7 +115,9 @@ export const contextSlice = createSlice({
             state.currentUser.displayName = payload
         },
         setCurrentUserDescription: (state, {payload}) => {
-            state.currentUser.creator.description = payload
+            if(state.currentUser.creator) {
+                state.currentUser.creator.description = payload
+            }
         },
         setToken: (state, {payload}) => {
             state.token = payload
@@ -185,6 +207,12 @@ export const contextSlice = createSlice({
         },
         setCloseNewPostModal: (state) => {
             state.openNewPostModal = false;
+        },
+        setOpenPushMediasModal: (state) => {
+            state.openPushMediasModal = true;
+        },
+        setClosePushMediasModal: (state) => {
+            state.openPushMediasModal = false;
         }
     }
 })
@@ -219,7 +247,9 @@ export const {
     setcloseModal,
     setopenModal,
     setOpenNewPostModal,
-    setCloseNewPostModal
+    setCloseNewPostModal,
+    setClosePushMediasModal,
+    setOpenPushMediasModal
 } = contextSlice.actions
 
 export default contextSlice.reducer
