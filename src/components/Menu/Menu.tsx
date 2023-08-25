@@ -78,9 +78,9 @@ const Menu = () => {
 
           </ResponsiveText>
         </MenuItem>
-        <MenuItem onClick={() => handleNavigate('chat')}>
+        <MenuItem onClick={() => handleNavigate('chatList')}>
           <IconContainer>
-            {pathname === "/chat" &&
+            {pathname === "/chatList" &&
               <RouteSelector />}
               <BiMessageDetail color='white' size={24}/>
           </IconContainer>

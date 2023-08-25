@@ -18,6 +18,7 @@ const RedDiv = styled.div`
   justify-content: center;
   max-height: 100%;
   overflow: auto;
+  height: 100%;
   `;
 
   function InnerApp() {

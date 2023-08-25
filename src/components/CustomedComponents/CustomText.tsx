@@ -10,7 +10,7 @@ type TextProp = {
 }
 
 const TextWrapper = styled.span`
-    font-size: 19px;
+    font-size: 18px;
     color: ${colors.white};
 `;
 

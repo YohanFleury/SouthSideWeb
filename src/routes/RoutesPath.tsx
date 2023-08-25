@@ -14,6 +14,7 @@ import MySubsPage from '../pages/MySubsPage/MySubsPage';
 import MyBooksPage from '../pages/MyBooksPage/MyBooksPage';
 import colors from '../config/colors';
 import SettingsScreen from '../pages/SettingsScreen/SettingsScreen';
+import ChatDetailPage from '../pages/ChatDetailPage/ChatDetailPage';
 
 
 const RoutesPath = () => {
@@ -29,13 +30,15 @@ const RoutesPath = () => {
     <Route path="/" element={<HomePage />} />
     <Route path="/research" element={<ResearchPage />} />
     <Route path="/notifications" element={<NotificationsPage />} />
-    <Route path="/chat" element={<ChatListPage />} />
+    <Route path="/chatList" element={<ChatListPage />} />
+    <Route path="/chat/:username/:convId" element={<ChatDetailPage />} />
     <Route path="/:username" element={<CreatorProfilPage />} />
     <Route path="/:username/post/:publicationId" element={<PostDetail />} />
     <Route path="/myfavs" element={<MyFavsPage />} />
     <Route path="/mysubs" element={<MySubsPage />} />
     <Route path="/mybooks" element={<MyBooksPage />} />
     <Route path="/settings" element={<SettingsScreen />} />
+
   </Routes>
   </MainContainer>
 )};

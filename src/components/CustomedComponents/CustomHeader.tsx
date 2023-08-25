@@ -10,9 +10,10 @@ interface CustomHeaderProps {
 
 const CustomHeader:React.FC<CustomHeaderProps> = ({ title }) => {
   const isNewPostModalOpen = useAppSelector(state => state.context.openNewPostModal)
+  const isOpenPushModalOpen = useAppSelector(state => state.context.openPushMediasModal)
   return (
-    <BlurryDiv style={{zIndex: isNewPostModalOpen ? 0 : 10 }}>
-        <CustomText>{title}</CustomText>
+    <BlurryDiv style={{zIndex: isNewPostModalOpen || isOpenPushModalOpen ? 0 : 10 }}>
+        <CustomText style={{fontSize: 24, fontWeight: 'bold'}}>{title}</CustomText>
     </BlurryDiv>
   )
 }

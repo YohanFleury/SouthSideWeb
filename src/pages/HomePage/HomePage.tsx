@@ -107,6 +107,7 @@ const MainContainer = styled.div`
   flex: 1;
   margin: auto;
   position: relative;
+  min-height: 800px;
 `;
 
 
